@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace ProyectoLFA.Controllers
@@ -40,6 +41,7 @@ namespace ProyectoLFA.Controllers
         }
         public ActionResult CargarArchivo(IFormFile File)
         {
+            // Lectura del archiv y eliminación de los intros y espacios sin contenido textual 
             try
             {
                 if (File != null)
@@ -60,14 +62,19 @@ namespace ProyectoLFA.Controllers
                         txtFile.CommentTokens = new string[] { "#" };
                         txtFile.SetDelimiters(new string[] { "," });
                         txtFile.HasFieldsEnclosedInQuotes = true;
+                        Regex regex = new Regex("[a-zA-Z\\{\\}]");
 
                         while (!txtFile.EndOfData)
                         {
                           string data = txtFile.ReadLine();
-                           if (data !="")
+                            if (data != null) 
                             {
-                                Singleton.Instance.Texto.Add(data);
+                                if (regex.IsMatch(data))
+                                {
+                                    Singleton.Instance.Texto.Add(data);
+                                }
                             }
+                            
                         }
                         txtFile.Close();
                     }
