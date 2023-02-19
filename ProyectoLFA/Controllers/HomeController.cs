@@ -76,9 +76,46 @@ namespace ProyectoLFA.Controllers
                             }
                             
                         }
-                        txtFile.Close();
                     }
-
+                    //separación por secciónes 
+                    for (int a = 0; a < Singleton.Instance.Texto.Count(); a++)
+                    {
+                        if (Singleton.Instance.Texto[a].Contains("SETS"))
+                        {
+                            while (!Singleton.Instance.Texto[a].Contains("TOKENS"))
+                            {
+                                Singleton.Instance.txt_Sets.Add(Singleton.Instance.Texto[a]);
+                                a++;
+                            }
+                            a--;
+                        }
+                        else if (Singleton.Instance.Texto[a].Contains("TOKENS"))
+                        {
+                            while (!Singleton.Instance.Texto[a].Contains("ACTIONS"))
+                            {
+                                Singleton.Instance.txt_Tokens.Add(Singleton.Instance.Texto[a]);
+                                a++;
+                            }
+                            a--;
+                        }
+                        else if (Singleton.Instance.Texto[a].Contains("ACTIONS"))
+                        {
+                            while (!Singleton.Instance.Texto[a].Contains("ERROR"))
+                            {
+                                Singleton.Instance.txt_Actions.Add(Singleton.Instance.Texto[a]);
+                                a++;
+                            }
+                            a--;
+                        }
+                        else if (Singleton.Instance.Texto[a].Contains("ERROR"))
+                        {
+                            while (a < Singleton.Instance.Texto.Count())
+                            {
+                                Singleton.Instance.txt_Error.Add(Singleton.Instance.Texto[a]);
+                                a++;
+                            }
+                        }
+                    }  
                 }
             }
             catch (Exception)

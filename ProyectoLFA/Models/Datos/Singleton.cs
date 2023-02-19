@@ -14,5 +14,10 @@ namespace ProyectoLFA.Models.Datos
             }
         }
        public List<string> Texto = new List<string>();
+       public List<string> txt_Sets = new List<string>();
+       public List<string> txt_Tokens = new List<string>();
+       public List<string> txt_Actions = new List<string>();
+       public List<string> txt_Error = new List<string>();
+        
     }
 }
