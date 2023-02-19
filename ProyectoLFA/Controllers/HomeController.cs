@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic.FileIO;
 using ProyectoLFA.Models;
+using ProyectoLFA.Models.Datos;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,11 +16,11 @@ namespace ProyectoLFA.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
+        private IHostingEnvironment Environment;
+        public HomeController(IHostingEnvironment _environment)
         {
-            _logger = logger;
+            Environment = _environment;
+
         }
 
         public IActionResult Index()
@@ -32,6 +37,50 @@ namespace ProyectoLFA.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        public ActionResult CargarArchivo(IFormFile File)
+        {
+            try
+            {
+                if (File != null)
+                {
+                    string path = Path.Combine(this.Environment.WebRootPath, "Uploads");
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    string FileName = Path.GetFileName(File.FileName);
+                    string FilePath = Path.Combine(path, FileName);
+                    using (FileStream stream = new FileStream(FilePath, FileMode.Create))
+                    {
+                        File.CopyTo(stream);
+                    }
+                    using (TextFieldParser txtFile = new TextFieldParser(FilePath))
+                    {
+                        txtFile.CommentTokens = new string[] { "#" };
+                        txtFile.SetDelimiters(new string[] { "," });
+                        txtFile.HasFieldsEnclosedInQuotes = true;
+
+                        while (!txtFile.EndOfData)
+                        {
+                          string data = txtFile.ReadLine();
+                           if (data !="")
+                            {
+                                Singleton.Instance.Texto.Add(data);
+                            }
+                        }
+                        txtFile.Close();
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

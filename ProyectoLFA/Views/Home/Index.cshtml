@@ -2,6 +2,10 @@
     ViewData["Title"] = "Home Page";
 }
 
+<form asp-action="CargarArchivo" method="post" enctype="multipart/form-data">
+    <input type="file" name="File"  value="Seleccionar archivo" class="btn btn-outline-secondary"/>
+    <input type="submit" value="Importar" class="btn btn-outline-secondary" />
+</form>
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
