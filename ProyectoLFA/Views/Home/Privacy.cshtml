@@ -1,14 +1,19 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Analizador";
 }
 
 <body>
+
+    <div class="text-center" style="margin-top:65px;">
+        <h1 class="display-4">¡Escáner listo!</h1>
+        <p>El analizador está listo para entrar en acción, analiza el texto y verifica el formato de la gramática.</p>
+    </div>
+
+    <div style="margin-top:50px;">
     <form asp-action="CargarArchivo" method="post" enctype="multipart/form-data">
     <input type="file" name="File"  value="Seleccionar archivo" class="btn btn-outline-secondary"/>
-    <input type="submit" value="Importar" class="btn btn-outline-secondary" />
+    <input type="submit" value="Importar" class="btn btn-outline-dark" />
     </form>
-    <div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
     </div>
+
 </body>
