@@ -2,11 +2,20 @@
     ViewData["Title"] = "Home Page";
 }
 
-<form asp-action="CargarArchivo" method="post" enctype="multipart/form-data">
-    <input type="file" name="File"  value="Seleccionar archivo" class="btn btn-outline-secondary"/>
-    <input type="submit" value="Importar" class="btn btn-outline-secondary" />
-</form>
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<body>
+    <div class="container-xxl hero-header mb-5">
+        <div class="container my-5 py-5 px-lg-5">
+            <div class="row g-5 py-5">
+                <div class="col-lg-6 text-center text-lg-start">
+                    <h1 class="text-gray mb-4 animated zoomIn">Analizador léxico de grámatica</h1>
+                    <p class="text-gray pb-3 animated zoomIn">Realiza la lectura de un archivo de texto que contenga la definición de una gramática, el escáner permitira verificar si está correcto el formato.</p>
+                    <a asp-controller="Home" asp-action="Privacy" class="btn btn-outline-dark py-sm-3 px-sm-5 rounded-pill animated slideInRight">Analizar texto</a>
+                </div>
+                <div class="col-lg-6 text-center text-lg-start">
+                    <img class="img-fluid" src="https://i.pinimg.com/originals/8d/1b/5c/8d1b5c244cf4b4c78ae17085874f2601.gif" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
