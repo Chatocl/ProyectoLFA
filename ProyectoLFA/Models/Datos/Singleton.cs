@@ -18,6 +18,7 @@ namespace ProyectoLFA.Models.Datos
        public List<string> txt_Tokens = new List<string>();
        public List<string> txt_Actions = new List<string>();
        public List<string> txt_Error = new List<string>();
+       public Clases.Analizar Analizar = new Clases.Analizar();
         
     }
 }
