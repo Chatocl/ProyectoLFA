@@ -41,7 +41,7 @@ namespace ProyectoLFA.Controllers
         }
         public ActionResult CargarArchivo(IFormFile File)
         {
-            // Lectura del archiv y eliminación de los intros y espacios sin contenido textual 
+            // Lectura del archivo y eliminación de los intros y espacios sin contenido textual 
             try
             {
                 if (File != null)
@@ -77,7 +77,7 @@ namespace ProyectoLFA.Controllers
                             
                         }
                     }
-                    //separación por secciónes 
+                    //separación por secciones 
                     for (int a = 0; a < Singleton.Instance.Texto.Count(); a++)
                     {
                         if (Singleton.Instance.Texto[a].Contains("SETS"))
@@ -115,7 +115,7 @@ namespace ProyectoLFA.Controllers
                                 a++;
                             }
                         }
-                    }  
+                    }
                 }
             }
             catch (Exception)
@@ -124,7 +124,7 @@ namespace ProyectoLFA.Controllers
                 throw;
             }
 
-            return RedirectToAction(nameof(Index));
+            return View("Privacy");
         }
     }
 }

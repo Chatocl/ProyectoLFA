@@ -2,6 +2,11 @@
     ViewData["Title"] = "Analizador";
 }
 
+<header>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</header>
 <body>
 
     <div class="text-center" style="margin-top:65px;">
@@ -12,7 +17,7 @@
     <div style="margin-top:50px;">
     <form asp-action="CargarArchivo" method="post" enctype="multipart/form-data">
     <input type="file" name="File"  value="Seleccionar archivo" class="btn btn-outline-dark"/>
-    <input type="submit" value="Importar" class="btn btn-outline-dark" />
+    <input type="submit" value="Importar" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal"/>
     </form>
     </div>
 
