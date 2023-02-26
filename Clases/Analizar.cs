@@ -93,26 +93,11 @@ namespace Clases
                         {
                             Verificado.Add(-1);
                             string patron_actions = @"\s*([0-9]+[0-9]+)\s+\=\s+'([A-Z]+)'";
-                            bool paso_actions = false;
-                            for (a = 1; a < actions.Count()-1; a++)
+                            for (a = 4; a < actions.Count()-2; a++)
                             {
                                 if (Regex.IsMatch(actions[a], patron_actions))
                                 {
-                                    paso_actions = true;
-                                }
-                                else
-                                {
-                                    paso_actions = false;
-                                    break;
-                                }
-                            }
-                            if (paso_actions)
-                            {
-                                Verificado.Add(-1);
-                                if (Texto[actions.Count()] == "}")
-                                {
                                     Verificado.Add(-1);
-                                    return Verificado;
                                 }
                                 else
                                 {
@@ -120,10 +105,15 @@ namespace Clases
                                     return Verificado;
                                 }
                             }
+
+                            if (Texto[actions.Count()-1] == "}")
+                            {
+                                Verificado.Add(-1);
+                                return Verificado;
+                            }
                             else
                             {
                                 Verificado.Add(-2);
-                                Verificado.Add(a + 1);
                                 return Verificado;
                             }
                         }
