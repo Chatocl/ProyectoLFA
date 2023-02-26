@@ -138,7 +138,30 @@ namespace Clases
         }
         public List<int> Analizar_Error(List<string> error, List<string> Texto)
         {
-            return new List<int>();
+            int a = 0;
+            List<int> Verificado = new List<int>();
+            string patron_error = @"ERROR\s*\=\s+([0-9]+)$";
+            if (error.Count() == 0)
+            {
+                Verificado.Add(-2);
+                return Verificado;
+            }
+            else
+            {
+                for (a=0;a<error.Count()-1;a++)
+                {
+                    if (Regex.IsMatch(Texto[a], patron_error))
+                    {
+                        Verificado.Add(-1);
+                    }
+                    else
+                    {
+                        Verificado.Add(-2);
+                        return Verificado;
+                    }
+                 }
+                return Verificado;
+            }
         }
 
     }
