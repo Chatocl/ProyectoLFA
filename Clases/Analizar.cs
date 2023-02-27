@@ -18,7 +18,7 @@ namespace Clases
             List<int> Verificado = new List<int>();
             if (sets.Count() == 0 )
             {
-                if (Texto[0] == "sets")
+                if (!Texto[0].Contains("sets"))
                 {
                     Verificado.Add(-2);
                     Verificado.Add(1);
@@ -35,11 +35,11 @@ namespace Clases
             {
                 if (sets.Count() > 1)
                 {
-                    string patron = @"^\s*(\w+)\s*=\s*(('\w+'|CHR\((\d+)\))((\s*\.\.\s*)|(\s*\+?\s*))?)*\s*$";
+                    string patron_SETS = @"^\s*(\w+)\s*=\s*(('\w+'|CHR\((\d+)\))((\s*\.\.\s*)|(\s*\+?\s*))?)*\s*$";
                     bool paso=false;
                     for (a = 1; a < sets.Count(); a++)
                     {
-                        if (Regex.IsMatch(sets[a],patron))
+                        if (Regex.IsMatch(sets[a],patron_SETS))
                         {
                            paso=true;
                         }
@@ -82,9 +82,10 @@ namespace Clases
             string patronTokens2 = @"^\s*TOKEN\s*\d+\s*=\s*((\w*\s*(\((\w*\s*(\*|\+|\?|\|)?\s*)*\)\s*(\*|\+|\?|\|)?)\s*))\s*$";
             string patronTokens3 = @"^\s*TOKEN\s*\d+\s*=\s*(((\s*\{\s*((\w*\s*(\((\w*\s*(\*|\+|\?|\|)?\s*)*\)\s*(\*|\+|\?|\|)?)\s*)*)\s*\}\s*)*)|((\w*\s*(\((\w*\s*(\*|\+|\?|\|)?\s*)*\)\s*(\*|\+|\?|\|)?)\s*)*))*\s*$";
             int a = 1;
+            int i = 0;
             List<int> Verificado = new List<int>();
 
-            if (tokens[0]!="TOKENS")
+            if (!tokens[0].Contains("TOKENS"))
             {
                 while (Texto[a]!=tokens[0])
                 {
@@ -126,19 +127,32 @@ namespace Clases
                     }
                     else
                     {
-                        Verificado.Add(-2);
-                        Verificado.Add(a);
+                        for (i = 0; i < Texto.Count(); i++)
+                        {
+                            if (Texto[i] == tokens[a])
+                            {
+                                Verificado.Add(-2);
+                                Verificado.Add(i+1);
+                            }
+                        }
+
                         return Verificado;
                     }
                 }
                 else
                 {
-                    Verificado.Add(-2);
-                    Verificado.Add(a);
+                    for (i = 0; i < Texto.Count(); i++)
+                    {
+                        if (Texto[i] == tokens[a])
+                        {
+                            Verificado.Add(-2);
+                            Verificado.Add(i + 1);
+                        }
+                    }
+
                     return Verificado;
                 }
             }
-            return Verificado;
         }
        
         /// <summary>
@@ -148,7 +162,9 @@ namespace Clases
         public List<int> Analizar_Actions(List<string> actions, List<string> Texto)
         {
             int a = 0;
+            int i = 0;
             List<int> Verificado = new List<int>();
+            bool paso = false;
             if (actions.Count() == 0)
             {
                 Verificado.Add(-2);
@@ -156,55 +172,94 @@ namespace Clases
             }
             else
             {
-                if (actions[0] == "ACTIONS")
+                if (Regex.IsMatch(actions[0], @"^\s*ACTIONS\s*$"))
                 {
-                    Verificado.Add(-1);
-                    if (Texto[1] == "RESERVADAS()")
+                    if (Regex.IsMatch(actions[1], @"^\s*RESERVADAS\(\)\s*$")) 
                     {
-                        Verificado.Add(-1);
-                        if (Texto[3] == "{")
+                        if (Regex.IsMatch(actions[2], @"^\s*{\s*$"))
                         {
-                            Verificado.Add(-1);
-                            string patron_actions = @"\s*(\d+)\s*\=\s+'([A-Z]+)'";
-                            for (a = 4; a < actions.Count()-2; a++)
+                            string patron_actions = @"^\s*(\d+)\s*\=\s*'([A-Z]+)'\s*$";
+                            for (a = 3; a < actions.Count()-2; a++)
                             {
                                 if (Regex.IsMatch(actions[a], patron_actions))
                                 {
-                                    Verificado.Add(-1);
+                                    paso = true;
                                 }
                                 else
                                 {
-                                    Verificado.Add(-2);
-                                    return Verificado;
+                                    paso = false;
+                                    break;
                                 }
                             }
 
-                            if (Texto[actions.Count()-1] == "}")
+                            if (Regex.IsMatch(actions[actions.Count()-1], @"^\s*}\s*$"))
+                            {
+                                paso = true;
+                            }
+                            else
+                            {
+                               paso = false;
+                            }
+
+                            if (paso) 
                             {
                                 Verificado.Add(-1);
                                 return Verificado;
                             }
                             else
                             {
-                                Verificado.Add(-2);
+                          
+                                for (i = 0; i < Texto.Count(); i++)
+                                {
+                                    if (Texto[i]==actions[a])
+                                    {
+                                        Verificado.Add(-2);
+                                        Verificado.Add(i);
+                                    }
+                                }
+                                
                                 return Verificado;
                             }
                         }
                         else
                         {
-                            Verificado.Add(-2);
+                            a = 2;
+                            for (i = 0; i < Texto.Count(); i++)
+                            {
+                                if (Texto[i] == actions[2])
+                                {
+                                    Verificado.Add(-2);
+                                    Verificado.Add(i);
+                                }
+                            }
                             return Verificado;
                         }
                     }
                     else
                     {
-                        Verificado.Add(-2);
+                        a = 2;
+                        for (i = 0; i < Texto.Count(); i++)
+                        {
+                            if (Texto[i] == actions[1])
+                            {
+                                Verificado.Add(-2);
+                                Verificado.Add(i);
+                            }
+                        }
                         return Verificado;
                     }
                 }
                 else
                 {
-                    Verificado.Add(-2);
+                    a = 2;
+                    for (i = 0; i < Texto.Count(); i++)
+                    {
+                        if (Texto[i] == actions[0])
+                        {
+                            Verificado.Add(-2);
+                            Verificado.Add(i);
+                        }
+                    }
                     return Verificado;
                 }
             }
@@ -218,7 +273,7 @@ namespace Clases
         {
             int a = 0;
             List<int> Verificado = new List<int>();
-            string patron_error = @"ERROR\s*\=\s+([0-9]+)$";
+            string patron_error = @"^\s*ERROR\s*=\s*([0-9]+)$";
             if (error.Count() == 0)
             {
                 Verificado.Add(-2);
@@ -226,9 +281,9 @@ namespace Clases
             }
             else
             {
-                for (a=0;a<error.Count()-1;a++)
+                for (a=0;a<error.Count();a++)
                 {
-                    if (Regex.IsMatch(Texto[a], patron_error))
+                    if (Regex.IsMatch(error[a], patron_error))
                     {
                         Verificado.Add(-1);
                     }

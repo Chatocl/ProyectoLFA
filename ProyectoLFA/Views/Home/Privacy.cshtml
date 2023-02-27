@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ProyectoLFA.Models.Datos.Repuesta
+@{
     ViewData["Title"] = "Analizador";
 }
 
@@ -17,7 +18,7 @@
     <div style="margin-top:50px;">
         <form asp-action="CargarArchivo" method="post" enctype="multipart/form-data" style="text-align:center;">
     <input type="file" name="File"  value="Seleccionar archivo" class="btn btn-outline-dark"/>
-    <input type="submit" value="Importar" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal"/>
+    <input type="submit" value="Cagar archivo" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal"/>
     </form>
     </div>
 
@@ -27,8 +28,8 @@
             <div class="card text-center" style="margin-top:50px;">
                 <div class="card-header">Resumen de análisis</div>
                 <div class="card-body">
-                <h5 class="card-title">Errores encontrados:</h5>
-                <p class="card-text">Se han encontrado x errores:</p>
+                <h5 class="card-title">Resultado</h5>
+                <p class="card-text">@Model.RepuestaId</p>
                 </div>
             </div>
          </div>
@@ -36,12 +37,7 @@
 
 </body>
 
-<style>
-    .oculto {
-        display: none;
-    }
 
-</style>
 
 <script>
     var boton = document.getElementById("mostrarDiv");

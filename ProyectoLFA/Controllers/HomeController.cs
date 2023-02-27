@@ -26,12 +26,14 @@ namespace ProyectoLFA.Controllers
 
         public IActionResult Index()
         {
+            
             return View();
         }
 
         public IActionResult Privacy()
         {
-            return View();
+            Repuesta repuesta = new Repuesta();
+            return View(repuesta);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -42,8 +44,10 @@ namespace ProyectoLFA.Controllers
         public ActionResult CargarArchivo(IFormFile File)
         {
             // Lectura del archivo y eliminación de los intros y espacios sin contenido textual 
+            Repuesta repuesta = new Repuesta();
             try
             {
+                
                 if (File != null)
                 {
                     string path = Path.Combine(this.Environment.WebRootPath, "Uploads");
@@ -80,34 +84,34 @@ namespace ProyectoLFA.Controllers
                     //separación por secciones 
                     for (int a = 0; a < Singleton.Instance.Texto.Count(); a++)
                     {
-                        if (Singleton.Instance.Texto[a].Contains("SETS"))
+                        if (Singleton.Instance.Texto[a].Contains("SETS") &&  a < Singleton.Instance.Texto.Count())
                         {
-                            while (!Singleton.Instance.Texto[a].Contains("TOKENS"))
+                            while (!Singleton.Instance.Texto[a].Contains("TOKENS") && a < Singleton.Instance.Texto.Count())
                             {
                                 Singleton.Instance.txt_Sets.Add(Singleton.Instance.Texto[a]);
                                 a++;
                             }
                             a--;
                         }
-                        else if (Singleton.Instance.Texto[a].Contains("TOKENS"))
+                        else if (Singleton.Instance.Texto[a].Contains("TOKENS") && a < Singleton.Instance.Texto.Count())
                         {
-                            while (!Singleton.Instance.Texto[a].Contains("ACTIONS"))
+                            while (!Singleton.Instance.Texto[a].Contains("ACTIONS") && a < Singleton.Instance.Texto.Count())
                             {
                                 Singleton.Instance.txt_Tokens.Add(Singleton.Instance.Texto[a]);
                                 a++;
                             }
                             a--;
                         }
-                        else if (Singleton.Instance.Texto[a].Contains("ACTIONS"))
+                        else if (Singleton.Instance.Texto[a].Contains("ACTIONS") &&  a < Singleton.Instance.Texto.Count())
                         {
-                            while (!Singleton.Instance.Texto[a].Contains("ERROR"))
+                            while (!Singleton.Instance.Texto[a].Contains("ERROR") && a < Singleton.Instance.Texto.Count())
                             {
                                 Singleton.Instance.txt_Actions.Add(Singleton.Instance.Texto[a]);
                                 a++;
                             }
                             a--;
                         }
-                        else if (Singleton.Instance.Texto[a].Contains("ERROR"))
+                        else if (Singleton.Instance.Texto[a].Contains("ERROR") && a < Singleton.Instance.Texto.Count())
                         {
                             while (a < Singleton.Instance.Texto.Count())
                             {
@@ -124,7 +128,7 @@ namespace ProyectoLFA.Controllers
                 throw;
             }
 
-            return View("Privacy");
+            return View("Privacy",repuesta);
         }
 
         public ActionResult Analisis_Lexico()
@@ -133,7 +137,8 @@ namespace ProyectoLFA.Controllers
             List<int> ResTokens = new List<int>();
             List<int> ResActions = new List<int>();
             List<int> ResError = new List<int>();
-            string respuesta = "";
+            Repuesta repuesta = new Repuesta();
+            repuesta.RepuestaId += "";
 
             try
             {
@@ -149,10 +154,26 @@ namespace ProyectoLFA.Controllers
                             ResError = Singleton.Instance.Analizar.Analizar_Error(Singleton.Instance.txt_Error, Singleton.Instance.Texto);
                             if (ResError[0] == -1)
                             {
-                                respuesta += "Todo Correcto";
+                                repuesta.RepuestaId += "No se han encontrado errores.";
+                            }
+                            else
+                            {
+                                repuesta.RepuestaId += "Se ha encontrado un error en la fila " +ResError[1];
                             }
                         }
+                        else
+                        {
+                            repuesta.RepuestaId += "Se ha encontrado un error en la fila " + ResActions[1];
+                        }
                     }
+                    else
+                    {
+                        repuesta.RepuestaId += "Se ha encontrado un error en la fila " + ResTokens[1];
+                    }
+                }
+                else
+                {
+                    repuesta.RepuestaId += "Se ha encontrado un error en la fila " + ResTest[1];
                 }
             }
             catch (Exception)
@@ -160,7 +181,8 @@ namespace ProyectoLFA.Controllers
 
                 throw;
             }
-            return View("Privacy");
+           
+            return View("Privacy", repuesta);
         }
     }
 }
