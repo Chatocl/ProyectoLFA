@@ -47,7 +47,8 @@ namespace ProyectoLFA.Controllers
             Repuesta repuesta = new Repuesta();
             try
             {
-                
+                Singleton.Instance.Texto_Completo.Clear();
+                Singleton.Instance.Texto.Clear();
                 if (File != null)
                 {
                     string path = Path.Combine(this.Environment.WebRootPath, "Uploads");
@@ -73,6 +74,7 @@ namespace ProyectoLFA.Controllers
                             string data = txtFile.ReadLine();
                             if (data != null)
                             {
+                                Singleton.Instance.Texto_Completo.Add(data);
                                 if (regex.IsMatch(data))
                                 {
                                     Singleton.Instance.Texto.Add(data);
@@ -80,105 +82,48 @@ namespace ProyectoLFA.Controllers
                             }
 
                         }
-                    }
-                    //separación por secciones 
-                    for (int a = 0; a < Singleton.Instance.Texto.Count(); a++)
-                    {
-                        if (Singleton.Instance.Texto[a].Contains("SETS") &&  a < Singleton.Instance.Texto.Count())
-                        {
-                            while (!Singleton.Instance.Texto[a].Contains("TOKENS") && a < Singleton.Instance.Texto.Count())
-                            {
-                                Singleton.Instance.txt_Sets.Add(Singleton.Instance.Texto[a]);
-                                a++;
-                            }
-                            a--;
-                        }
-                        else if (Singleton.Instance.Texto[a].Contains("TOKENS") && a < Singleton.Instance.Texto.Count())
-                        {
-                            while (!Singleton.Instance.Texto[a].Contains("ACTIONS") && a < Singleton.Instance.Texto.Count())
-                            {
-                                Singleton.Instance.txt_Tokens.Add(Singleton.Instance.Texto[a]);
-                                a++;
-                            }
-                            a--;
-                        }
-                        else if (Singleton.Instance.Texto[a].Contains("ACTIONS") &&  a < Singleton.Instance.Texto.Count())
-                        {
-                            while (!Singleton.Instance.Texto[a].Contains("ERROR") && a < Singleton.Instance.Texto.Count())
-                            {
-                                Singleton.Instance.txt_Actions.Add(Singleton.Instance.Texto[a]);
-                                a++;
-                            }
-                            a--;
-                        }
-                        else if (Singleton.Instance.Texto[a].Contains("ERROR") && a < Singleton.Instance.Texto.Count())
-                        {
-                            while (a < Singleton.Instance.Texto.Count())
-                            {
-                                Singleton.Instance.txt_Error.Add(Singleton.Instance.Texto[a]);
-                                a++;
-                            }
-                        }
+                        repuesta.RepuestaId = "Ingreso del archivo correcto. Presione \"Analizar Texto\" para continuar ";
                     }
                 }
             }
             catch (Exception)
             {
-
+                repuesta.RepuestaId = "Ingreso un archivo incorrecto o vacio";
                 throw;
             }
-
+           
             return View("Privacy",repuesta);
         }
 
         public ActionResult Analisis_Lexico()
         {
-            List<int> ResTest = new List<int>();
-            List<int> ResTokens = new List<int>();
-            List<int> ResActions = new List<int>();
-            List<int> ResError = new List<int>();
+            List<int> ResTexto = new List<int>();
+            int a=0;
             Repuesta repuesta = new Repuesta();
-            repuesta.RepuestaId += "";
+            repuesta.RepuestaId = "";
 
             try
             {
-                ResTest = Singleton.Instance.Analizar.Analizar_Sets(Singleton.Instance.txt_Sets, Singleton.Instance.Texto);
-                if (ResTest[0] == -1)
+                ResTexto = Singleton.Instance.Analizar.Analizar_Texto(Singleton.Instance.Texto);
+                if (ResTexto[0] == -1) 
                 {
-                    ResTokens = Singleton.Instance.Analizar.Analizar_Tokens(Singleton.Instance.txt_Tokens, Singleton.Instance.Texto);
-                    if (ResTokens[0] == -1)
-                    {
-                        ResActions = Singleton.Instance.Analizar.Analizar_Actions(Singleton.Instance.txt_Actions, Singleton.Instance.Texto);
-                        if (ResActions[0] == -1)
-                        {
-                            ResError = Singleton.Instance.Analizar.Analizar_Error(Singleton.Instance.txt_Error, Singleton.Instance.Texto);
-                            if (ResError[0] == -1)
-                            {
-                                repuesta.RepuestaId += "No se han encontrado errores.";
-                            }
-                            else
-                            {
-                                repuesta.RepuestaId += "Se ha encontrado un error en la fila " +ResError[1];
-                            }
-                        }
-                        else
-                        {
-                            repuesta.RepuestaId += "Se ha encontrado un error en la fila " + ResActions[1];
-                        }
-                    }
-                    else
-                    {
-                        repuesta.RepuestaId += "Se ha encontrado un error en la fila " + ResTokens[1];
-                    }
+                    repuesta.RepuestaId = "No se han encontrado errores.";
                 }
                 else
                 {
-                    repuesta.RepuestaId += "Se ha encontrado un error en la fila " + ResTest[1];
+                    for (a = 0; a < Singleton.Instance.Texto_Completo.Count(); a++)
+                    {
+                        if (Singleton.Instance.Texto_Completo[a].Contains(Singleton.Instance.Texto[ResTexto[1]]))
+                        {
+                            break;
+                        }
+                    }
+                    repuesta.RepuestaId = "Se ha encontrado un error en la fila " + a +" siendo esta: " + Singleton.Instance.Texto_Completo[a];
                 }
             }
             catch (Exception)
             {
-
+                repuesta.RepuestaId = "Ingreso un archivo incorrecto o vacio";
                 throw;
             }
            

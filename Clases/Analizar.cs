@@ -9,292 +9,257 @@ namespace Clases
     public class Analizar
     {
         /// <summary>
-        /// Analizar de forma lexica el formato de los SETS
+        /// Analizardor de un texto con las condiciones del manual
         /// </summary>
-        /// <returns>Lista de ints indicado -1 si esta correcto o -2 mas la fila donde se encuentra el error </returns>
-        public List<int> Analizar_Sets(List<string> sets, List<string> Texto)
+        /// <param name="Texto"></param>
+        /// <returns> una lista de enteros donde -1 es si todo esta correcto y -2 si algo no esta correcto mas la fila donde se encuentra el fallo</returns>
+        public List<int> Analizar_Texto(List<string> Texto) 
         {
             int a = 0;
+            bool paso = false;
+            bool token = true;
             List<int> Verificado = new List<int>();
-            if (sets.Count() == 0 )
-            {
-                if (!Texto[0].Contains("sets"))
-                {
-                    Verificado.Add(-2);
-                    Verificado.Add(1);
-                    return Verificado;
-                }
-                else
-                {
-                    Verificado.Add(-1);
-                    return Verificado;
-                }
-                
-            }
-            else
-            {
-                if (sets.Count() > 1)
-                {
-                    string patron_SETS = @"^\s*(\w+)\s*=\s*(('\w+'|CHR\((\d+)\))((\s*\.\.\s*)|(\s*\+?\s*))?)*\s*$";
-                    bool paso=false;
-                    for (a = 1; a < sets.Count(); a++)
-                    {
-                        if (Regex.IsMatch(sets[a],patron_SETS))
-                        {
-                           paso=true;
-                        }
-                        else
-                        {
-                           paso = false;
-                           break;
-                        }
-                    }
-                    if (paso) 
-                    {
-                        Verificado.Add(-1);
-                        return Verificado;
-                    }
-                    else
-                    {
-                        Verificado.Add(-2);
-                        Verificado.Add(a+1);
-                        return Verificado;
-                    }
-                }
-                else
-                {
-                    Verificado.Add(-2);
-                    Verificado.Add(2);
-                    return Verificado;
-                }
-               
-            }
-            
-        }
-
-        /// <summary>
-        /// Analizar de forma lexica el formato de los TOKENS
-        /// </summary>
-        /// <returns>Lista de ints indicado -1 si esta correcto o -2 mas la fila donde se encuentra el error </returns>
-        public List<int> Analizar_Tokens(List<string> tokens, List<string> Texto) 
-        {
+            string patron_SETS = @"^\s*(\w+)\s*=\s*(('\w+'|CHR\((\d+)\))((\s*\.\.\s*)|(\s*\+?\s*))?)*\s*$";
             string patronTokens1 = @"^\s*TOKEN\s*\d+\s*=\s*(((('.')|(\w*\s*(\*|\+|\?|\|)?))\s*))*$";
-            string patronTokens2 = @"^\s*TOKEN\s*\d+\s*=\s*((\w*\s*(\((\w*\s*(\*|\+|\?|\|)?\s*)*\)\s*(\*|\+|\?|\|)?)\s*))\s*$";
+            string patronTokens2 = @"^\s*TOKEN\s*\d+\s*=\s*((\w*\s*(\((\w*\s*(\*|\+|\?|\|)?\s*)*\)\s*(\*|\+|\?|\|)?)\s*)*)\s*$";
             string patronTokens3 = @"^\s*TOKEN\s*\d+\s*=\s*(((\s*\{\s*((\w*\s*(\((\w*\s*(\*|\+|\?|\|)?\s*)*\)\s*(\*|\+|\?|\|)?)\s*)*)\s*\}\s*)*)|((\w*\s*(\((\w*\s*(\*|\+|\?|\|)?\s*)*\)\s*(\*|\+|\?|\|)?)\s*)*))*\s*$";
-            int a = 1;
-            int i = 0;
-            List<int> Verificado = new List<int>();
+            string patron_actions = @"^\s*(\d+)\s*\=\s*'([A-Z]+)'\s*$";
+            string patron_error = @"^\s*ERROR\s*=\s*([0-9]+)$";
 
-            if (!tokens[0].Contains("TOKENS"))
+            for ( a = 0; a < Texto.Count(); a++)
             {
-                while (Texto[a]!=tokens[0])
+                if (Regex.IsMatch(Texto[a], @"^\s*SETS\s*$"))
                 {
                     a++;
-                }
-                Verificado.Add(-2);
-                Verificado.Add(a);
-                return Verificado;
-            }
-            else
-            {
-                if (tokens.Count()>1)
-                {
-                    bool paso = false;
-                    for ( a = 1; a < tokens.Count(); a++)
+                    while (Regex.IsMatch(Texto[a], patron_SETS))
                     {
-                        if (Regex.IsMatch(tokens[a], patronTokens1))
-                        {
-                            paso = true;
-                        }
-                        else if (Regex.IsMatch(tokens[a], patronTokens2))
-                        {
-                            paso = true;
-                        }
-                        else if (Regex.IsMatch(tokens[a], patronTokens3))
-                        {
-                            paso = true;
-                        }
-                        else
-                        {
-                            paso = false;
-                            break;
-                        }
+                        a++;
                     }
-                    if (paso)
+                    if (Regex.IsMatch(Texto[a], @"^\s*TOKENS\s*$")) 
                     {
-                        Verificado.Add(-1);
-                        return Verificado;
-                    }
-                    else
-                    {
-                        for (i = 0; i < Texto.Count(); i++)
+                        a++;
+                        while (token)
                         {
-                            if (Texto[i] == tokens[a])
+                            
+                            if (Regex.IsMatch(Texto[a], patronTokens1))
                             {
-                                Verificado.Add(-2);
-                                Verificado.Add(i+1);
+                                token = true;
                             }
-                        }
-
-                        return Verificado;
-                    }
-                }
-                else
-                {
-                    for (i = 0; i < Texto.Count(); i++)
-                    {
-                        if (Texto[i] == tokens[a])
-                        {
-                            Verificado.Add(-2);
-                            Verificado.Add(i + 1);
-                        }
-                    }
-
-                    return Verificado;
-                }
-            }
-        }
-       
-        /// <summary>
-        /// Analizar de forma lexica el formato de los ACTIONS
-        /// </summary>
-        /// <returns>Lista de ints indicado -1 si esta correcto o -2 mas la fila donde se encuentra el error </returns>
-        public List<int> Analizar_Actions(List<string> actions, List<string> Texto)
-        {
-            int a = 0;
-            int i = 0;
-            List<int> Verificado = new List<int>();
-            bool paso = false;
-            if (actions.Count() == 0)
-            {
-                Verificado.Add(-2);
-                return Verificado;
-            }
-            else
-            {
-                if (Regex.IsMatch(actions[0], @"^\s*ACTIONS\s*$"))
-                {
-                    if (Regex.IsMatch(actions[1], @"^\s*RESERVADAS\(\)\s*$")) 
-                    {
-                        if (Regex.IsMatch(actions[2], @"^\s*{\s*$"))
-                        {
-                            string patron_actions = @"^\s*(\d+)\s*\=\s*'([A-Z]+)'\s*$";
-                            for (a = 3; a < actions.Count()-2; a++)
+                            else if (Regex.IsMatch(Texto[a], patronTokens2))
                             {
-                                if (Regex.IsMatch(actions[a], patron_actions))
+                                token = true;
+                            }
+                            else if (Regex.IsMatch(Texto[a], patronTokens3))
+                            {
+                                token = true;
+                            }
+                            else
+                            {
+                                token = false;
+                                break;
+                            }
+                            a++;
+                        }
+                        if (Regex.IsMatch(Texto[a], @"^\s*ACTIONS\s*$"))
+                        {
+                            a++;
+                            if (Regex.IsMatch(Texto[a], @"^\s*RESERVADAS\(\)\s*$"))
+                            {
+                                a++;
+                                if (Regex.IsMatch(Texto[a], @"^\s*{\s*$"))
                                 {
-                                    paso = true;
+                                    a++;
+                                    while (Regex.IsMatch(Texto[a], patron_actions))
+                                    {
+                                        a++;
+                                    }
+                                    if (Regex.IsMatch(Texto[a], @"^\s*}\s*$"))
+                                    {
+                                        a++;
+                                        if (Regex.IsMatch(Texto[a], patron_error))
+                                        {
+                                            while (a<Texto.Count())
+                                            {
+                                                if (Regex.IsMatch(Texto[a], patron_error))
+                                                {
+                                                    paso = true;
+                                                    a++;
+                                                }
+                                                else
+                                                {
+                                                    paso = false;
+                                                    break;
+                                                }
+                                            }
+                                            if (paso)
+                                            {
+                                                Verificado.Add(-1); 
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                Verificado.Add(-2);
+                                                Verificado.Add(a);
+                                                break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Verificado.Add(-2);
+                                            Verificado.Add(a);
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Verificado.Add(-2);
+                                        Verificado.Add(a);
+                                        break;
+                                    }
                                 }
-                                else
+                                else 
                                 {
-                                    paso = false;
+                                    Verificado.Add(-2);
+                                    Verificado.Add(a);
                                     break;
                                 }
                             }
-
-                            if (Regex.IsMatch(actions[actions.Count()-1], @"^\s*}\s*$"))
-                            {
-                                paso = true;
-                            }
                             else
-                            {
-                               paso = false;
-                            }
-
-                            if (paso) 
-                            {
-                                Verificado.Add(-1);
-                                return Verificado;
-                            }
-                            else
-                            {
-                          
-                                for (i = 0; i < Texto.Count(); i++)
-                                {
-                                    if (Texto[i]==actions[a])
-                                    {
-                                        Verificado.Add(-2);
-                                        Verificado.Add(i);
-                                    }
-                                }
-                                
-                                return Verificado;
-                            }
-                        }
-                        else
-                        {
-                            a = 2;
-                            for (i = 0; i < Texto.Count(); i++)
-                            {
-                                if (Texto[i] == actions[2])
-                                {
-                                    Verificado.Add(-2);
-                                    Verificado.Add(i);
-                                }
-                            }
-                            return Verificado;
-                        }
-                    }
-                    else
-                    {
-                        a = 2;
-                        for (i = 0; i < Texto.Count(); i++)
-                        {
-                            if (Texto[i] == actions[1])
                             {
                                 Verificado.Add(-2);
-                                Verificado.Add(i);
+                                Verificado.Add(a);
+                                break;
                             }
                         }
-                        return Verificado;
-                    }
-                }
-                else
-                {
-                    a = 2;
-                    for (i = 0; i < Texto.Count(); i++)
-                    {
-                        if (Texto[i] == actions[0])
+                        else 
                         {
                             Verificado.Add(-2);
-                            Verificado.Add(i);
+                            Verificado.Add(a);
+                            break;
                         }
-                    }
-                    return Verificado;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Analizar de forma lexica el formato de los ERROR
-        /// </summary>
-        /// <returns>Lista de ints indicado -1 si esta correcto o -2 mas la fila donde se encuentra el error </returns>
-        public List<int> Analizar_Error(List<string> error, List<string> Texto)
-        {
-            int a = 0;
-            List<int> Verificado = new List<int>();
-            string patron_error = @"^\s*ERROR\s*=\s*([0-9]+)$";
-            if (error.Count() == 0)
-            {
-                Verificado.Add(-2);
-                return Verificado;
-            }
-            else
-            {
-                for (a=0;a<error.Count();a++)
-                {
-                    if (Regex.IsMatch(error[a], patron_error))
-                    {
-                        Verificado.Add(-1);
                     }
                     else
                     {
                         Verificado.Add(-2);
-                        return Verificado;
+                        Verificado.Add(a);
+                        break;
                     }
-                 }
-                return Verificado;
+                }
+                else
+                {
+                    if (Regex.IsMatch(Texto[a], @"^\s*TOKENS\s*$"))
+                    {
+                        a++;
+                        while (token)
+                        {
+                            
+                            if (Regex.IsMatch(Texto[a], patronTokens1))
+                            {
+                                token = true;
+                            }
+                            else if (Regex.IsMatch(Texto[a], patronTokens2))
+                            {
+                                token = true;
+                            }
+                            else if (Regex.IsMatch(Texto[a], patronTokens3))
+                            {
+                                token = true;
+                            }
+                            else
+                            {
+                                token = false;
+                                break;
+                            }
+                            a++;
+                        }
+                        if (Regex.IsMatch(Texto[a], @"^\s*ACTIONS\s*$"))
+                        {
+                            a++;
+                            if (Regex.IsMatch(Texto[a], @"^\s*RESERVADAS\(\)\s*$"))
+                            {
+                                a++;
+                                if (Regex.IsMatch(Texto[a], @"^\s*{\s*$"))
+                                {
+                                    a++;
+                                    while (Regex.IsMatch(Texto[a], patron_actions))
+                                    {
+                                        a++;
+                                    }
+                                    if (Regex.IsMatch(Texto[a], @"^\s*}\s*$"))
+                                    {
+                                        a++;
+                                        if (Regex.IsMatch(Texto[a], patron_error))
+                                        {
+                                            while (a < Texto.Count())
+                                            {
+                                                if (Regex.IsMatch(Texto[a], patron_error))
+                                                {
+                                                    paso = true;
+                                                    a++;
+                                                }
+                                                else
+                                                {
+                                                    paso = false;
+                                                    break;
+                                                }
+                                            }
+                                            if (paso)
+                                            {
+                                                Verificado.Add(-1);
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                Verificado.Add(-2);
+                                                Verificado.Add(a);
+                                                break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Verificado.Add(-2);
+                                            Verificado.Add(a);
+                                            break;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Verificado.Add(-2);
+                                        Verificado.Add(a);
+                                        break;
+                                    }
+                                }
+                                else
+                                {
+                                    Verificado.Add(-2);
+                                    Verificado.Add(a);
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                Verificado.Add(-2);
+                                Verificado.Add(a);
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Verificado.Add(-2);
+                            Verificado.Add(a);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        Verificado.Add(-2);
+                        Verificado.Add(a);
+                        break;
+                    }
+                }
             }
+            return Verificado;
+        
         }
 
     }
