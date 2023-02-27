@@ -118,7 +118,7 @@ namespace ProyectoLFA.Controllers
                             break;
                         }
                     }
-                    repuesta.RepuestaId = "Se ha encontrado un error en la fila " + a +" siendo esta: " + Singleton.Instance.Texto_Completo[a];
+                    repuesta.RepuestaId = "Se ha encontrado un error en la fila " + (a+1) +" siendo esta: " + Singleton.Instance.Texto_Completo[a];
                 }
             }
             catch (Exception)
