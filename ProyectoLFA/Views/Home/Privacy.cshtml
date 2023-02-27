@@ -15,10 +15,21 @@
     </div>
 
     <div style="margin-top:50px;">
-    <form asp-action="CargarArchivo" method="post" enctype="multipart/form-data">
+        <form asp-action="CargarArchivo" method="post" enctype="multipart/form-data" style="text-align:center;">
     <input type="file" name="File"  value="Seleccionar archivo" class="btn btn-outline-dark"/>
     <input type="submit" value="Importar" class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#exampleModal"/>
     </form>
+    </div>
+
+    <div style="margin-top:50px;">
+        <button type="button" class="btn btn-dark d-grid gap-2 col-6 mx-auto">Analizar texto</button>
+        <div class="card text-center" style="margin-top:50px;">
+            <div class="card-header">Resumen de análisis</div>
+        <div class="card-body">
+        <h5 class="card-title">Errores encontrados:</h5>
+        <p class="card-text">Se han encontrado x errores:</p>
+        </div>
+</div>
     </div>
 
 </body>
