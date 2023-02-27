@@ -66,15 +66,15 @@ namespace ProyectoLFA.Controllers
 
                         while (!txtFile.EndOfData)
                         {
-                          string data = txtFile.ReadLine();
-                            if (data != null) 
+                            string data = txtFile.ReadLine();
+                            if (data != null)
                             {
                                 if (regex.IsMatch(data))
                                 {
                                     Singleton.Instance.Texto.Add(data);
                                 }
                             }
-                            
+
                         }
                     }
                     //separación por secciones 
@@ -124,6 +124,42 @@ namespace ProyectoLFA.Controllers
                 throw;
             }
 
+            return View("Privacy");
+        }
+
+        public ActionResult Analisis_Lexico()
+        {
+            List<int> ResTest = new List<int>();
+            List<int> ResTokens = new List<int>();
+            List<int> ResActions = new List<int>();
+            List<int> ResError = new List<int>();
+            string respuesta = "";
+
+            try
+            {
+                ResTest = Singleton.Instance.Analizar.Analizar_Sets(Singleton.Instance.txt_Sets, Singleton.Instance.Texto);
+                if (ResTest[0] == -1)
+                {
+                    ResTokens = Singleton.Instance.Analizar.Analizar_Tokens(Singleton.Instance.txt_Tokens, Singleton.Instance.Texto);
+                    if (ResTokens[0] == -1)
+                    {
+                        ResActions = Singleton.Instance.Analizar.Analizar_Actions(Singleton.Instance.txt_Actions, Singleton.Instance.Texto);
+                        if (ResActions[0] == -1)
+                        {
+                            ResError = Singleton.Instance.Analizar.Analizar_Error(Singleton.Instance.txt_Error, Singleton.Instance.Texto);
+                            if (ResError[0] == -1)
+                            {
+                                respuesta += "Todo Correcto";
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             return View("Privacy");
         }
     }

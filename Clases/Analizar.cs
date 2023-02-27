@@ -35,7 +35,7 @@ namespace Clases
             {
                 if (sets.Count() > 1)
                 {
-                    string patron = @"^\s*(\w+)\s*=\s*(('[^']+'|CHR\((\d+)\))..('[^']+'|CHR\((\d+)\))(\s*\+)?)*\s*$";
+                    string patron = @"^\s*(\w+)\s*=\s*(('\w+'|CHR\((\d+)\))((\s*\.\.\s*)|(\s*\+?\s*))?)*\s*$";
                     bool paso=false;
                     for (a = 1; a < sets.Count(); a++)
                     {
@@ -165,7 +165,7 @@ namespace Clases
                         if (Texto[3] == "{")
                         {
                             Verificado.Add(-1);
-                            string patron_actions = @"\s*([0-9]+[0-9]+)\s+\=\s+'([A-Z]+)'";
+                            string patron_actions = @"\s*(\d+)\s*\=\s+'([A-Z]+)'";
                             for (a = 4; a < actions.Count()-2; a++)
                             {
                                 if (Regex.IsMatch(actions[a], patron_actions))
