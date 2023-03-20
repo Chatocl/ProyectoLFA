@@ -36,6 +36,11 @@ namespace ProyectoLFA.Controllers
             return View(repuesta);
         }
 
+        public IActionResult Tabla()
+        {
+            return View();
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
