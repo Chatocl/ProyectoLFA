@@ -26,12 +26,14 @@ namespace ProyectoLFA.Controllers
 
         public IActionResult Index()
         {
+            
             return View();
         }
 
         public IActionResult Privacy()
         {
-            return View();
+            Repuesta repuesta = new Repuesta();
+            return View(repuesta);
         }
 
         public IActionResult Tabla()
@@ -47,8 +49,11 @@ namespace ProyectoLFA.Controllers
         public ActionResult CargarArchivo(IFormFile File)
         {
             // Lectura del archivo y eliminación de los intros y espacios sin contenido textual 
+            Repuesta repuesta = new Repuesta();
             try
             {
+                Singleton.Instance.Texto_Completo.Clear();
+                Singleton.Instance.Texto.Clear();
                 if (File != null)
                 {
                     string path = Path.Combine(this.Environment.WebRootPath, "Uploads");
@@ -71,65 +76,64 @@ namespace ProyectoLFA.Controllers
 
                         while (!txtFile.EndOfData)
                         {
-                          string data = txtFile.ReadLine();
-                            if (data != null) 
+                            string data = txtFile.ReadLine();
+                            if (data != null)
                             {
+                                Singleton.Instance.Texto_Completo.Add(data);
                                 if (regex.IsMatch(data))
                                 {
                                     Singleton.Instance.Texto.Add(data);
                                 }
                             }
-                            
+
                         }
-                    }
-                    //separación por secciones 
-                    for (int a = 0; a < Singleton.Instance.Texto.Count(); a++)
-                    {
-                        if (Singleton.Instance.Texto[a].Contains("SETS"))
-                        {
-                            while (!Singleton.Instance.Texto[a].Contains("TOKENS"))
-                            {
-                                Singleton.Instance.txt_Sets.Add(Singleton.Instance.Texto[a]);
-                                a++;
-                            }
-                            a--;
-                        }
-                        else if (Singleton.Instance.Texto[a].Contains("TOKENS"))
-                        {
-                            while (!Singleton.Instance.Texto[a].Contains("ACTIONS"))
-                            {
-                                Singleton.Instance.txt_Tokens.Add(Singleton.Instance.Texto[a]);
-                                a++;
-                            }
-                            a--;
-                        }
-                        else if (Singleton.Instance.Texto[a].Contains("ACTIONS"))
-                        {
-                            while (!Singleton.Instance.Texto[a].Contains("ERROR"))
-                            {
-                                Singleton.Instance.txt_Actions.Add(Singleton.Instance.Texto[a]);
-                                a++;
-                            }
-                            a--;
-                        }
-                        else if (Singleton.Instance.Texto[a].Contains("ERROR"))
-                        {
-                            while (a < Singleton.Instance.Texto.Count())
-                            {
-                                Singleton.Instance.txt_Error.Add(Singleton.Instance.Texto[a]);
-                                a++;
-                            }
-                        }
+                        repuesta.RepuestaId = "Ingreso del archivo correcto. Presione \"Analizar Texto\" para continuar ";
                     }
                 }
             }
             catch (Exception)
             {
-
+                repuesta.RepuestaId = "Ingreso un archivo incorrecto o vacio";
                 throw;
             }
+           
+            return View("Privacy",repuesta);
+        }
+        public ActionResult Analisis_Lexico()
+        {
+            List<int> ResTexto = new List<int>();
+            List<string> Tokens = new List<string>();
+            int a=0;
+            Repuesta repuesta = new Repuesta();
+            repuesta.RepuestaId = "";
 
-            return View("Privacy");
+            try
+            {
+                (ResTexto,Tokens) = Singleton.Instance.Analizar.Analizar_Texto(Singleton.Instance.Texto);
+                if (ResTexto[0] == -1) 
+                {
+                    repuesta.RepuestaId = "No se han encontrado errores.";
+                    Singleton.Instance.Tokens = Tokens;
+                }
+                else
+                {
+                    for (a = 0; a < Singleton.Instance.Texto_Completo.Count(); a++)
+                    {
+                        if (Singleton.Instance.Texto_Completo[a].Contains(Singleton.Instance.Texto[ResTexto[1]]))
+                        {
+                            break;
+                        }
+                    }
+                    repuesta.RepuestaId = "Se ha encontrado un error en la fila " + (a+1) +" siendo esta: " + Singleton.Instance.Texto_Completo[a];
+                }
+            }
+            catch (Exception)
+            {
+                repuesta.RepuestaId = "Ingreso un archivo incorrecto o vacio";
+                throw;
+            }
+           
+            return View("Privacy", repuesta);
         }
     }
 }
