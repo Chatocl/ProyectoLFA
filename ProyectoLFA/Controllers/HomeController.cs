@@ -94,20 +94,21 @@ namespace ProyectoLFA.Controllers
            
             return View("Privacy",repuesta);
         }
-
         public ActionResult Analisis_Lexico()
         {
             List<int> ResTexto = new List<int>();
+            List<string> Tokens = new List<string>();
             int a=0;
             Repuesta repuesta = new Repuesta();
             repuesta.RepuestaId = "";
 
             try
             {
-                ResTexto = Singleton.Instance.Analizar.Analizar_Texto(Singleton.Instance.Texto);
+                (ResTexto,Tokens) = Singleton.Instance.Analizar.Analizar_Texto(Singleton.Instance.Texto);
                 if (ResTexto[0] == -1) 
                 {
                     repuesta.RepuestaId = "No se han encontrado errores.";
+                    Singleton.Instance.Tokens = Tokens;
                 }
                 else
                 {
