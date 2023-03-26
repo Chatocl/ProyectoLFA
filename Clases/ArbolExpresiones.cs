@@ -4,35 +4,34 @@ using System.Text;
 
 namespace Clases
 {
-    public class ArbolExpresiones:Node
+    public class ArbolExpresiones : Node
     {
 
-        private Stack<Node> TokenStack = new Stack<Node>();
+        private Stack<string> TokenStack = new Stack<string>();
         private Stack<Node> TreeStack = new Stack<Node>();
         private Dictionary<string, int> precedencia = new Dictionary<string, int>();
 
         public ArbolExpresiones()
         {
-            precedencia.Add("#", 0);
             precedencia.Add("|", 1);
             precedencia.Add(".", 2);
             precedencia.Add("*", 3);
             precedencia.Add("+", 3);
             precedencia.Add("?", 3);
         }
-        private bool EsSimbolo(string c)
-        { 
-            return c!="("&& c != ")" && EsOperador(c);
+        public bool EsSimbolo(string c)
+        {
+            return c != "(" && c != ")" && !EsOperador(c);
         }
         private bool EsOperador(string c)
         {
             return precedencia.ContainsKey(c);
         }
-        private bool concadenacion(string c)
+        private bool Unitario(string c)
         {
             return c == "*" || c == "+" || c == "?";
         }
-        public Node ContruirArbol(List<string> Expreciones) 
+        public Node ContruirArbol(List<string> Expreciones)
         {
 
             foreach (string tokens in Expreciones)
@@ -41,61 +40,64 @@ namespace Clases
                 {
                     TreeStack.Push(new Node(tokens));
                 }
-                else if (tokens == "(") 
+                else if (tokens == "(")
                 {
-                    TokenStack.Push(new Node(tokens));
+                    TokenStack.Push(tokens);
                 }
                 else if (tokens == ")")
                 {
-                    while (TokenStack.Count>0 && TokenStack.Peek().Valor!="(")
+                    while (TokenStack.Count > 0 && TokenStack.Peek() != "(")
                     {
-                        if (TreeStack.Count<2)
+                        if (TokenStack.Count == 0)
                         {
-                            break; 
+                            throw new Exception("Error");
                         }
-                        Node temp = TokenStack.Pop();
+                        if (TreeStack.Count < 2)
+                        {
+                            throw new Exception("Error");
+                        }
+                        Node temp = new Node(TokenStack.Pop());
                         Node Der = TreeStack.Pop();
                         Node Izq = TreeStack.Pop();
-                       
+
                         temp.Left = Izq;
                         temp.Right = Der;
                         TreeStack.Push(temp);
                     }
-                    if (TokenStack.Count == 0)
-                    {
-                        throw new Exception("Error");
-                    }
+
                     TokenStack.Pop();
                 }
                 else if (EsOperador(tokens))
                 {
-                    Node node = new Node(tokens);
-                    if (concadenacion(tokens))
+                    if (Unitario(tokens))
                     {
-                        if (TreeStack.Count < 1)
+                        Node node = new Node(tokens);
+                        if (TreeStack.Count < 0)
                         {
                             throw new Exception("Error");
                         }
                         node.Left = TreeStack.Pop();
+                        TreeStack.Push(node);
                     }
-                    else
+                    else if (TokenStack.Count > 0 && TokenStack.Peek() != "(" && precedencia[tokens] <= precedencia[TokenStack.Peek()])
                     {
-                        while (TokenStack.Count>0 && TokenStack.Peek().Valor!="("&& precedencia[tokens]<= precedencia[TokenStack.Peek().Valor])
+                        Node temp = new Node(TokenStack.Pop());
+                        if (TreeStack.Count < 2)
                         {
-                            Node operador = TokenStack.Pop();
-                            if (TreeStack.Count < 2)
-                            {
-                                throw new Exception("Error");
-                            }
-                            Node Der = TreeStack.Pop();
-                            Node Izq = TreeStack.Pop();
-
-                            operador.Left = Izq;
-                            operador.Right = Der;
-                            TreeStack.Push(operador);
+                            throw new Exception("Error");
                         }
+                        Node Der = TreeStack.Pop();
+                        Node Izq = TreeStack.Pop();
+
+                        temp.Left = Izq;
+                        temp.Right = Der;
+                        TreeStack.Push(temp);
                     }
-                    TokenStack.Push(node);
+                    if (!Unitario(tokens))
+                    {
+                        TokenStack.Push(tokens);
+                    }
+
                 }
                 else
                 {
@@ -103,10 +105,10 @@ namespace Clases
                 }
             }
 
-            while (TokenStack.Count>0)
+            while (TokenStack.Count > 0)
             {
-                Node operador = TokenStack.Pop();
-                if (operador.Valor == "(")
+                Node temp = new Node(TokenStack.Pop());
+                if (temp.Valor == "(")
                 {
                     throw new Exception("Error");
                 }
@@ -118,20 +120,19 @@ namespace Clases
                 Node Der = TreeStack.Pop();
                 Node Izq = TreeStack.Pop();
 
-                operador.Left = Izq;
-                operador.Right = Der;
-                TreeStack.Push(operador);
+                temp.Left = Izq;
+                temp.Right = Der;
+                TreeStack.Push(temp);
             }
 
-            if (TreeStack.Count != 1) 
+            if (TreeStack.Count != 1)
             {
                 throw new Exception("Error");
             }
-         
+
             return TreeStack.Pop();
         }
-        
+
     }
 
-   
 }

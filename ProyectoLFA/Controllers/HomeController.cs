@@ -38,6 +38,81 @@ namespace ProyectoLFA.Controllers
 
         public IActionResult Tabla()
         {
+            List<string> list = new List<string>();
+            string patron = @"^\s*TOKEN\s*\d+\s*=\s*";
+            string resultado = "";
+            string temp = "";
+            Clases.ArbolExpresiones arbolExpresiones = new Clases.ArbolExpresiones();
+            Clases.Node node = new Clases.Node();
+
+            for (int a = 0; a < Singleton.Instance.Tokens.Count(); a++)
+            {
+                if (a < Singleton.Instance.Tokens.Count() - 1)
+                {
+                    resultado += "(" + Regex.Replace(Singleton.Instance.Tokens[a], patron, "") + ") |";
+                }
+                else
+                {
+                    temp = Regex.Replace(Singleton.Instance.Tokens[a], patron, "");
+                    temp = Regex.Replace(temp, @"\s*{\s*RESERVADAS\(\s*\)\s*}\s*", "");
+                    resultado += temp;
+                }
+            }
+
+            while (resultado.Length > 0)
+            {
+                Match match = Regex.Match(resultado, @"(^\w+|^'.'|^\*|^\+|^\?|^\||^\(|^\))");
+                if (match.Value != "")
+                {
+                    list.Add(match.Value);
+                }
+                resultado = resultado.Remove(0, match.Value.Length);
+                if (resultado.Length > 0)
+                {
+                    if (resultado[0] == ' ')
+                    {
+                        resultado = resultado.Remove(0, 1);
+                    }
+                }
+
+            }
+
+            for (int i = 1; i < list.Count; i++)
+            {
+                if (i < list.Count - 1)
+                {
+                    string temp2 = list[i];
+                    string temp3 = list[i + 1];
+                    string temp4 = "";
+
+                    if (i != 0)
+                    {
+                        temp4 = list[i - 1];
+                        if (temp2 == ")" && arbolExpresiones.EsSimbolo(temp3))
+                        {
+                            list.Insert(i, ".");
+                            i++;
+                        }
+                        else if (arbolExpresiones.EsSimbolo(temp2) && arbolExpresiones.EsSimbolo(temp3))
+                        {
+                            list.Insert(i + 1, ".");
+                            i++;
+                        }
+                        else if (arbolExpresiones.EsSimbolo(temp2) && temp3 == "(")
+                        {
+                            list.Insert(i + 1, ".");
+                            i++;
+                        }
+
+                    }
+
+                }
+            }
+            list.Insert(0, "(");
+            list.Add(")");
+            list.Add(".");
+            list.Add("#");
+            node = arbolExpresiones.ContruirArbol(list);
             return View();
         }
 
