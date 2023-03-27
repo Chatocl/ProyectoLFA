@@ -4,6 +4,9 @@ using System.Text;
 
 namespace Clases
 {
+    /// <summary>
+    /// Nodo de arbol binario modificado para el uso del arbol de expreciones 
+    /// </summary>
     public class Node
     {
         public Node Left{ get; set; }

@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace Clases
-{
+{  
+    /// <summary>
+    ///  Arbol de Expreciones    
+    /// </summary>
     public class ArbolExpresiones : Node
     {
-
+        int cantTerminal = 0;
         private Stack<string> TokenStack = new Stack<string>();
         private Stack<Node> TreeStack = new Stack<Node>();
         private Dictionary<string, int> precedencia = new Dictionary<string, int>();
@@ -19,6 +22,11 @@ namespace Clases
             precedencia.Add("+", 3);
             precedencia.Add("?", 3);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public bool EsSimbolo(string c)
         {
             return c != "(" && c != ")" && !EsOperador(c);
@@ -131,6 +139,64 @@ namespace Clases
             }
 
             return TreeStack.Pop();
+        }
+
+        public void PostOrder(Node node)
+        {
+            if (node == null)
+            {
+                return;
+            }
+            if (node.Left == null && node.Right == null)
+            {
+                cantTerminal++;
+                node.First = cantTerminal.ToString();
+                node.Last = cantTerminal.ToString();
+                node.Anulable = false;
+                return;
+            }
+
+            PostOrder(node.Left);
+            PostOrder(node.Right);
+
+            if (node.Valor == "|")
+            {
+                node.First = node.Left.First + "," + node.Right.First;
+                node.Last = node.Left.Last + "," + node.Right.Last;
+                node.Anulable = node.Left.Anulable || node.Right.Anulable;
+            }
+            else if (node.Valor == ".")
+            {
+                node.First = node.Left.First;
+                if (node.Left.Anulable)
+                {
+                    node.First += "," + node.Right.First;
+                }
+                node.Last = node.Right.Last;
+                if (node.Right.Anulable)
+                {
+                    node.Last += "," + node.Left.Last;
+                }
+                node.Anulable = node.Left.Anulable && node.Right.Anulable;
+            }
+            else if (node.Valor == "*")
+            {
+                node.First = node.Left.First;
+                node.Last = node.Left.Last;
+                node.Anulable = true;
+            }
+            else if (node.Valor == "+")
+            {
+                node.First = node.Left.First;
+                node.Last = node.Left.Last;
+                node.Anulable = node.Left.Anulable;
+            }
+            else if (node.Valor == "?")
+            {
+                node.First = node.Left.First + "," + node.Right.First;
+                node.Last = node.Left.Last + "," + node.Right.Last;
+                node.Anulable = true;
+            }
         }
 
     }
