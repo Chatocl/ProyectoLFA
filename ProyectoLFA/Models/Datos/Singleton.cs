@@ -19,6 +19,7 @@ namespace ProyectoLFA.Models.Datos
        public List<string> Tokens = new List<string>();
        public Clases.Analizar Analizar = new Clases.Analizar();
        public Clases.Node Arbol = new Clases.Node();
+       public Dictionary<int, HashSet<string>> TablaFollow = new Dictionary<int, HashSet<string>>();
 
     }
 }

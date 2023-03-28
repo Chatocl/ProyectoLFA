@@ -13,7 +13,9 @@ namespace Clases
         private Stack<string> TokenStack = new Stack<string>();
         private Stack<Node> TreeStack = new Stack<Node>();
         private Dictionary<string, int> precedencia = new Dictionary<string, int>();
-
+        /// <summary>
+        /// Metodo de creacion para agregar los simbolos en un dictionario de precedencia
+        /// </summary>
         public ArbolExpresiones()
         {
             precedencia.Add("|", 1);
@@ -23,10 +25,10 @@ namespace Clases
             precedencia.Add("?", 3);
         }
         /// <summary>
-        /// 
+        /// Metodo para saber si un string es un simbolo o un terminal
         /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
+        /// <param name="c">String a evaluar</param>
+        /// <returns>Devuelve true si es un terminal y false si es un no terminal</returns>
         public bool EsSimbolo(string c)
         {
             return c != "(" && c != ")" && !EsOperador(c);
@@ -140,7 +142,6 @@ namespace Clases
 
             return TreeStack.Pop();
         }
-
         public void PostOrder(Node node)
         {
             if (node == null)
@@ -197,6 +198,65 @@ namespace Clases
                 node.Last = node.Left.Last + "," + node.Right.Last;
                 node.Anulable = true;
             }
+        }
+        public void Terminales(Node node, Dictionary<int, HashSet<string>> diccionario)
+        {
+            if (node == null)
+            {
+                return;
+            }
+            if (node.Left == null && node.Right == null)
+            {
+                HashSet<string> valores = new HashSet<string>();
+                diccionario.Add(Convert.ToInt32(node.First), valores);
+                return;
+            }
+            Terminales(node.Left, diccionario);
+            Terminales(node.Right, diccionario);
+
+        }
+        public void CalcularFollow(Node node, Dictionary<int, HashSet<string>> TablaFollow)
+        {
+            if (node == null)
+            {
+                return;
+            }
+            CalcularFollow(node.Left, TablaFollow);
+            CalcularFollow(node.Right, TablaFollow);
+
+            if (node.Left != null || node.Right != null)
+            {
+                if (node.Valor == "." || node.Valor == "+")
+                {
+                    foreach (string L in node.Left.Last.Split(","))
+                    {
+                        int l = Convert.ToInt32(L);
+                        foreach (string F in node.Right.First.Split(","))
+                        {
+                            if (!TablaFollow[l].Contains(F))
+                            {
+                                TablaFollow[l].Add(F);
+                            }
+                        }
+                    }
+                }
+                if (node.Valor == "*")
+                {
+                    foreach (string L in node.Left.Last.Split(","))
+                    {
+                        int l = Convert.ToInt32(L);
+                        foreach (string F in node.Left.First.Split(","))
+                        {
+                            if (!TablaFollow[l].Contains(F))
+                            {
+                                TablaFollow[l].Add(F);
+                            }
+                        }
+                    }
+                }
+            }
+
+
         }
 
     }

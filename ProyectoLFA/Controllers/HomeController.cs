@@ -116,6 +116,8 @@ namespace ProyectoLFA.Controllers
                 list.Add("#");
                 Singleton.Instance.Arbol = arbolExpresiones.ContruirArbol(list);
                 arbolExpresiones.PostOrder(Singleton.Instance.Arbol);
+                arbolExpresiones.Terminales(Singleton.Instance.Arbol,Singleton.Instance.TablaFollow);
+                arbolExpresiones.CalcularFollow(Singleton.Instance.Arbol, Singleton.Instance.TablaFollow);
                 return View();
             }
             catch (Exception)
