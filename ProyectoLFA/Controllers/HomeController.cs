@@ -43,7 +43,7 @@ namespace ProyectoLFA.Controllers
             string resultado = "";
             string temp = "";
             Clases.ArbolExpresiones arbolExpresiones = new Clases.ArbolExpresiones();
-            Clases.Node node = new Clases.Node();
+           
 
             for (int a = 0; a < Singleton.Instance.Tokens.Count(); a++)
             {
@@ -112,7 +112,8 @@ namespace ProyectoLFA.Controllers
             list.Add(")");
             list.Add(".");
             list.Add("#");
-            node = arbolExpresiones.ContruirArbol(list);
+            Singleton.Instance.Arbol = arbolExpresiones.ContruirArbol(list);
+            arbolExpresiones.PostOrder(Singleton.Instance.Arbol);
             return View();
         }
 

@@ -18,6 +18,7 @@ namespace ProyectoLFA.Models.Datos
        public List<string> Texto_Completo = new List<string>();
        public List<string> Tokens = new List<string>();
        public Clases.Analizar Analizar = new Clases.Analizar();
-        
+       public Clases.Node Arbol = new Clases.Node();
+
     }
 }
