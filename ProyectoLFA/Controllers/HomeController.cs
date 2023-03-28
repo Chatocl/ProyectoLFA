@@ -38,82 +38,92 @@ namespace ProyectoLFA.Controllers
 
         public IActionResult Tabla()
         {
-            List<string> list = new List<string>();
-            string patron = @"^\s*TOKEN\s*\d+\s*=\s*";
-            string resultado = "";
-            string temp = "";
-            Clases.ArbolExpresiones arbolExpresiones = new Clases.ArbolExpresiones();
-           
-
-            for (int a = 0; a < Singleton.Instance.Tokens.Count(); a++)
+            try
             {
-                if (a < Singleton.Instance.Tokens.Count() - 1)
-                {
-                    resultado += "(" + Regex.Replace(Singleton.Instance.Tokens[a], patron, "") + ") |";
-                }
-                else
-                {
-                    temp = Regex.Replace(Singleton.Instance.Tokens[a], patron, "");
-                    temp = Regex.Replace(temp, @"\s*{\s*RESERVADAS\(\s*\)\s*}\s*", "");
-                    resultado += temp;
-                }
-            }
+                List<string> list = new List<string>();
+                string patron = @"^\s*TOKEN\s*\d+\s*=\s*";
+                string resultado = "";
+                string temp = "";
+                Clases.ArbolExpresiones arbolExpresiones = new Clases.ArbolExpresiones();
 
-            while (resultado.Length > 0)
-            {
-                Match match = Regex.Match(resultado, @"(^\w+|^'.'|^\*|^\+|^\?|^\||^\(|^\))");
-                if (match.Value != "")
+
+                for (int a = 0; a < Singleton.Instance.Tokens.Count(); a++)
                 {
-                    list.Add(match.Value);
-                }
-                resultado = resultado.Remove(0, match.Value.Length);
-                if (resultado.Length > 0)
-                {
-                    if (resultado[0] == ' ')
+                    if (a < Singleton.Instance.Tokens.Count() - 1)
                     {
-                        resultado = resultado.Remove(0, 1);
+                        resultado += "(" + Regex.Replace(Singleton.Instance.Tokens[a], patron, "") + ") |";
+                    }
+                    else
+                    {
+                        temp = Regex.Replace(Singleton.Instance.Tokens[a], patron, "");
+                        temp = Regex.Replace(temp, @"\s*{\s*RESERVADAS\(\s*\)\s*}\s*", "");
+                        resultado += temp;
                     }
                 }
 
-            }
-
-            for (int i = 1; i < list.Count; i++)
-            {
-                if (i < list.Count - 1)
+                while (resultado.Length > 0)
                 {
-                    string temp2 = list[i];
-                    string temp3 = list[i + 1];
-                    string temp4 = "";
-
-                    if (i != 0)
+                    Match match = Regex.Match(resultado, @"(^\w+|^'.'|^\*|^\+|^\?|^\||^\(|^\))");
+                    if (match.Value != "")
                     {
-                        temp4 = list[i - 1];
-                        if (temp2 == ")" && arbolExpresiones.EsSimbolo(temp3))
+                        list.Add(match.Value);
+                    }
+                    resultado = resultado.Remove(0, match.Value.Length);
+                    if (resultado.Length > 0)
+                    {
+                        if (resultado[0] == ' ')
                         {
-                            list.Insert(i, ".");
-                            i++;
+                            resultado = resultado.Remove(0, 1);
                         }
-                        else if (arbolExpresiones.EsSimbolo(temp2) && arbolExpresiones.EsSimbolo(temp3))
-                        {
-                            list.Insert(i + 1, ".");
-                            i++;
-                        }
-                        else if (arbolExpresiones.EsSimbolo(temp2) && temp3 == "(")
-                        {
-                            list.Insert(i + 1, ".");
-                            i++;
-                        }
-
                     }
 
                 }
+
+                for (int i = 1; i < list.Count; i++)
+                {
+                    if (i < list.Count - 1)
+                    {
+                        string temp2 = list[i];
+                        string temp3 = list[i + 1];
+                        string temp4 = "";
+
+                        if (i != 0)
+                        {
+                            temp4 = list[i - 1];
+                            if (temp2 == ")" && arbolExpresiones.EsSimbolo(temp3))
+                            {
+                                list.Insert(i, ".");
+                                i++;
+                            }
+                            else if (arbolExpresiones.EsSimbolo(temp2) && arbolExpresiones.EsSimbolo(temp3))
+                            {
+                                list.Insert(i + 1, ".");
+                                i++;
+                            }
+                            else if (arbolExpresiones.EsSimbolo(temp2) && temp3 == "(")
+                            {
+                                list.Insert(i + 1, ".");
+                                i++;
+                            }
+
+                        }
+
+                    }
+                }
+                list.Insert(0, "(");
+                list.Add(")");
+                list.Add(".");
+                list.Add("#");
+                Singleton.Instance.Arbol = arbolExpresiones.ContruirArbol(list);
+                arbolExpresiones.PostOrder(Singleton.Instance.Arbol);
+                return View();
             }
-            list.Insert(0, "(");
-            list.Add(")");
-            list.Add(".");
-            list.Add("#");
-            Singleton.Instance.Arbol = arbolExpresiones.ContruirArbol(list);
-            arbolExpresiones.PostOrder(Singleton.Instance.Arbol);
+            catch (Exception)
+            {
+
+                
+                
+            }
             return View();
         }
 
