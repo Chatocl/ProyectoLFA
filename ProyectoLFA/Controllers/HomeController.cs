@@ -180,7 +180,7 @@ namespace ProyectoLFA.Controllers
             catch (Exception)
             {
                 repuesta.RepuestaId = "Ingreso un archivo incorrecto o vacio";
-                throw;
+                
             }
            
             return View("Privacy",repuesta);
@@ -216,7 +216,7 @@ namespace ProyectoLFA.Controllers
             catch (Exception)
             {
                 repuesta.RepuestaId = "Ingreso un archivo incorrecto o vacio";
-                throw;
+               
             }
            
             return View("Privacy", repuesta);
