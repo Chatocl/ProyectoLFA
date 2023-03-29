@@ -199,7 +199,7 @@ namespace Clases
                 node.Anulable = true;
             }
         }
-        public void Terminales(Node node, Dictionary<int, HashSet<string>> diccionario)
+        public void Terminales(Node node, Dictionary<int, List<string>> diccionario)
         {
             if (node == null)
             {
@@ -207,7 +207,7 @@ namespace Clases
             }
             if (node.Left == null && node.Right == null)
             {
-                HashSet<string> valores = new HashSet<string>();
+                List<string> valores = new List<string>();
                 diccionario.Add(Convert.ToInt32(node.First), valores);
                 return;
             }
@@ -215,7 +215,7 @@ namespace Clases
             Terminales(node.Right, diccionario);
 
         }
-        public void CalcularFollow(Node node, Dictionary<int, HashSet<string>> TablaFollow)
+        public void CalcularFollow(Node node, Dictionary<int, List<string>> TablaFollow)
         {
             if (node == null)
             {
