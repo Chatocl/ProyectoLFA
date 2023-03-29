@@ -55,6 +55,17 @@ namespace Clases
         /// <param name="Expreciones">Lista de Tokens obtenidos del txt ingresado</param>
         /// <returns>Nodo del Arbol ya armado</returns>
         /// <exception cref="Exception"></exception>
+        public List<Node> GetList(Node node)
+        {
+            List<Node> resultado = new List<Node>();
+            if (node != null)
+            {
+                resultado.AddRange(GetList(node.Left));
+                resultado.AddRange(GetList(node.Right));
+                resultado.Add(node);
+            }
+            return resultado;
+        }
         public Node ContruirArbol(List<string> Expreciones)
         {
 
@@ -230,7 +241,7 @@ namespace Clases
             }
             if (node.Left == null && node.Right == null)
             {
-                HashSet<string> valores = new HashSet<string>();
+                List<string> valores = new List<string>();
                 diccionario.Add(Convert.ToInt32(node.First), valores);
                 return;
             }

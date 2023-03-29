@@ -1,0 +1,96 @@
+﻿@using Clases;
+@model IEnumerable<ProyectoLFA.Models.Datos.FirstLast>
+
+@{
+    ViewData["Title"] = "Transiciones ADF";
+}
+
+<header>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+</header>
+<body>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Simbolo</th>
+                <th>First</th>
+                <th>Last</th>
+                <th>Nullable</th>
+            </tr>
+
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.simbolo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.first)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.last)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nullable)
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</body>
+
+<style>
+    .celda {
+        width: 50%;
+    }
+
+    .tabla-contenedor {
+        max-height: 400px;
+        overflow: auto;
+        background-color: #f2f2f2;
+        border: 1px solid #ccc;
+    }
+
+        .tabla-contenedor table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tabla-contenedor th,
+        .tabla-contenedor td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tabla-contenedor th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+    .table-container {
+        position: relative;
+    }
+
+        .table-container table {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .table-container thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+</style>

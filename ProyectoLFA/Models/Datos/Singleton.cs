@@ -20,6 +20,6 @@ namespace ProyectoLFA.Models.Datos
        public Clases.Analizar Analizar = new Clases.Analizar();
        public Clases.Node Arbol = new Clases.Node();
        public Dictionary<int, List<string>> TablaFollow = new Dictionary<int, List<string>>();
-
+       public List<Clases.Node> ListaImprimir = new List<Clases.Node>();
     }
 }

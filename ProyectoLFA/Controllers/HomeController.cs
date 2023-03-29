@@ -31,6 +31,16 @@ namespace ProyectoLFA.Controllers
             
             return View();
         }
+        public IActionResult First()
+        {
+
+            return View();
+        }
+        public IActionResult Follow()
+        {
+
+            return View();
+        }
 
         public IActionResult Privacy()
         {
@@ -47,9 +57,22 @@ namespace ProyectoLFA.Controllers
                 string resultado = "";
                 string temp = "";
                 Clases.ArbolExpresiones arbolExpresiones = new Clases.ArbolExpresiones();
-                List<string> Imprimir = new List<string>();
-
-
+                List<string> ImprimirFollow = new List<string>();
+                Singleton.Instance.ListaImprimir = arbolExpresiones.GetList(Singleton.Instance.Arbol);
+                List<FirstLast> Imprimir = new List<FirstLast>();
+                int pos = 0;
+                for (int i = 0; i < Singleton.Instance.ListaImprimir.Count; i++)
+                {
+                    var newSimbolo = new Models.Datos.FirstLast()
+                    {
+                        Id = (i + 1),
+                        simbolo = Singleton.Instance.ListaImprimir[i].Valor,
+                        first = Singleton.Instance.ListaImprimir[i].First,
+                        last = Singleton.Instance.ListaImprimir[i].Last,
+                        Nullable = Singleton.Instance.ListaImprimir[i].Anulable
+                    };
+                    Imprimir.Add(newSimbolo);
+                }
 
                 for (int a = 0; a < Singleton.Instance.Tokens.Count(); a++)
                 {
@@ -129,10 +152,10 @@ namespace ProyectoLFA.Controllers
                     {
                         valor += Singleton.Instance.TablaFollow[i][a] + ",";
                     }
-                    Imprimir.Add(valor.ToString());
+                    ImprimirFollow.Add(valor.ToString());
                 }
 
-                return View(Imprimir);
+                return View(ImprimirFollow);
             }
             catch (Exception)
             {
