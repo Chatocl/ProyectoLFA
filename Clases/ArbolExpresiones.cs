@@ -289,7 +289,55 @@ namespace Clases
 
 
         }
+        /// <summary>
+        /// Metodo para obtener la tabla de transciones para realizar el AFD
+        /// </summary>
+        /// <param name="node">Arbol de expreciones</param>
+        /// <param name="TablaFollow">Tabla de Follows</param>
+        /// <returns>Lista de los estados y su tabla de transciones</returns>
+        public (List<string>,List<string[]>) TablaTrancisiones(Node node, Dictionary<int, List<string>> TablaFollow)
+        {
+            Queue<string> TranstoCheck = new Queue<string>();
+            List<string> TransCheck = new List<string>();
+            List<string[]> Tracisiones = new List<string[]>();
 
+            TranstoCheck.Enqueue(node.First);
+
+            while (TranstoCheck.Count > 0)
+            {
+                string estado = TranstoCheck.Dequeue();
+                string[] terminales = new string[TablaFollow.Keys.Count];
+                for (int i = 0; i < terminales.Length; i++)
+                {
+                    terminales[i] = "";
+                }
+
+                if (!TransCheck.Contains(estado))
+                {
+                    TransCheck.Add(estado);
+                    foreach (string a in estado.Split(","))
+                    {
+                        string nuevoestado = "";
+                        for (int i = 0; i < TablaFollow[Convert.ToInt32(a)].Count; i++)
+                        {
+                            nuevoestado += TablaFollow[Convert.ToInt32(a)][i];
+                            if (i < TablaFollow[Convert.ToInt32(a)].Count - 1)
+                            {
+                                nuevoestado += ",";
+                            }
+                        }
+                        terminales[Convert.ToUInt32(a) - 1] = nuevoestado;
+                        if (!TransCheck.Contains(nuevoestado) && !TranstoCheck.Contains(nuevoestado) && !string.IsNullOrEmpty(nuevoestado))
+                        {
+                            TranstoCheck.Enqueue(nuevoestado);
+                        }
+                    }
+                    Tracisiones.Add(terminales);
+
+                }
+            }
+            return(TransCheck,Tracisiones);
+        }
     }
 
 }
