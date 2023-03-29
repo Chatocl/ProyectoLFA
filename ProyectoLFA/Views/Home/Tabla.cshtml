@@ -1,7 +1,8 @@
 ﻿@{
     ViewData["Title"] = "Transiciones ADF";
 }
-
+@using Clases;
+ 
 <header>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
@@ -14,24 +15,19 @@
         <p>La expresión regular está lista para generar la tabla FLF y transiciones AFD.</p>
     </div>
     <div class="form-inline">
-    <form asp-action="Tabla" method="post">
-        <button type="submit" class="btn btn-outline-success">Crear Tabla</button>
-    </form>
-</div>
-</body>
+        <form asp-action="Tabla" method="post">
+            <button type="submit" class="btn btn-outline-success">Crear Tabla</button>
+        </form>
+    </div>
 
-<style>
-    .oculto {
-        display: none;
+    <h1>Tabla</h1>
+
+    @{
+        ArbolExpresiones arbol = new ArbolExpresiones();
     }
 
-</style>
-
-<script>
-    var boton = document.getElementById("mostrarDiv");
-    var div = document.getElementById("miDiv");
-
-    boton.addEventListener("click", function () {
-        div.style.display = "block";
-    });
-</script>
+    @foreach (var elemento in arbol.FollowTable)
+    {
+        <p>@elemento</p>
+    }
+</body>
