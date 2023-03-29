@@ -36,6 +36,11 @@ namespace Clases
         {
             return c != "(" && c != ")" && !EsOperador(c);
         }
+        /// <summary>
+        /// Metodo para si un string es un operando 
+        /// </summary>
+        /// <param name="c">String a evaluar</param>
+        /// <returns></returns>
         private bool EsOperador(string c)
         {
             return precedencia.ContainsKey(c);
@@ -44,6 +49,12 @@ namespace Clases
         {
             return c == "*" || c == "+" || c == "?";
         }
+        /// <summary>
+        /// Metodo para generar un arbol de expresiones utilizando de base el algortimo proporcionado
+        /// </summary>
+        /// <param name="Expreciones">Lista de Tokens obtenidos del txt ingresado</param>
+        /// <returns>Nodo del Arbol ya armado</returns>
+        /// <exception cref="Exception"></exception>
         public Node ContruirArbol(List<string> Expreciones)
         {
 
@@ -145,6 +156,10 @@ namespace Clases
 
             return TreeStack.Pop();
         }
+        /// <summary>
+        /// Metodo para generar los FIRST y LAST de los nodos usando la navegación postorder del arbol binario
+        /// </summary>
+        /// <param name="node">Arbol de expreciones</param>
         public void PostOrder(Node node)
         {
             if (node == null)
@@ -202,6 +217,11 @@ namespace Clases
                 node.Anulable = true;
             }
         }
+        /// <summary>
+        /// Metodo para obtener todos los terminales o hojas del arbol de expreciones 
+        /// </summary>
+        /// <param name="node">Arbol de expreciones</param>
+        /// <param name="diccionario">Diccionario para almacenar los terminales</param>
         public void Terminales(Node node, Dictionary<int, List<string>> diccionario)
         {
             if (node == null)
@@ -210,7 +230,7 @@ namespace Clases
             }
             if (node.Left == null && node.Right == null)
             {
-                List<string> valores = new List<string>();
+                HashSet<string> valores = new HashSet<string>();
                 diccionario.Add(Convert.ToInt32(node.First), valores);
                 return;
             }
@@ -218,6 +238,11 @@ namespace Clases
             Terminales(node.Right, diccionario);
 
         }
+        /// <summary>
+        /// Metodo para calcular la tabla de Follow de los terminales 
+        /// </summary>
+        /// <param name="node">Arbol de expreciones</param>
+        /// <param name="TablaFollow">Diccionario con los terminales</param>
         public void CalcularFollow(Node node, Dictionary<int, List<string>> TablaFollow)
         {
             if (node == null)
@@ -261,7 +286,55 @@ namespace Clases
 
 
         }
+        /// <summary>
+        /// Metodo para obtener la tabla de transciones para realizar el AFD
+        /// </summary>
+        /// <param name="node">Arbol de expreciones</param>
+        /// <param name="TablaFollow">Tabla de Follows</param>
+        /// <returns>Lista de los estados y su tabla de transciones</returns>
+        public (List<string>,List<string[]>) TablaTrancisiones(Node node, Dictionary<int, List<string>> TablaFollow)
+        {
+            Queue<string> TranstoCheck = new Queue<string>();
+            List<string> TransCheck = new List<string>();
+            List<string[]> Tracisiones = new List<string[]>();
 
+            TranstoCheck.Enqueue(node.First);
+
+            while (TranstoCheck.Count > 0)
+            {
+                string estado = TranstoCheck.Dequeue();
+                string[] terminales = new string[TablaFollow.Keys.Count];
+                for (int i = 0; i < terminales.Length; i++)
+                {
+                    terminales[i] = "";
+                }
+
+                if (!TransCheck.Contains(estado))
+                {
+                    TransCheck.Add(estado);
+                    foreach (string a in estado.Split(","))
+                    {
+                        string nuevoestado = "";
+                        for (int i = 0; i < TablaFollow[Convert.ToInt32(a)].Count; i++)
+                        {
+                            nuevoestado += TablaFollow[Convert.ToInt32(a)][i];
+                            if (i < TablaFollow[Convert.ToInt32(a)].Count - 1)
+                            {
+                                nuevoestado += ",";
+                            }
+                        }
+                        terminales[Convert.ToUInt32(a) - 1] = nuevoestado;
+                        if (!TransCheck.Contains(nuevoestado) && !TranstoCheck.Contains(nuevoestado) && !string.IsNullOrEmpty(nuevoestado))
+                        {
+                            TranstoCheck.Enqueue(nuevoestado);
+                        }
+                    }
+                    Tracisiones.Add(terminales);
+
+                }
+            }
+            return(TransCheck,Tracisiones);
+        }
     }
 
 }
