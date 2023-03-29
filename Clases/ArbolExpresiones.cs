@@ -33,6 +33,11 @@ namespace Clases
         {
             return c != "(" && c != ")" && !EsOperador(c);
         }
+        /// <summary>
+        /// Metodo para si un string es un operando 
+        /// </summary>
+        /// <param name="c">String a evaluar</param>
+        /// <returns></returns>
         private bool EsOperador(string c)
         {
             return precedencia.ContainsKey(c);
@@ -41,6 +46,12 @@ namespace Clases
         {
             return c == "*" || c == "+" || c == "?";
         }
+        /// <summary>
+        /// Metodo para generar un arbol de expresiones utilizando de base el algortimo proporcionado
+        /// </summary>
+        /// <param name="Expreciones">Lista de Tokens obtenidos del txt ingresado</param>
+        /// <returns>Nodo del Arbol ya armado</returns>
+        /// <exception cref="Exception"></exception>
         public Node ContruirArbol(List<string> Expreciones)
         {
 
@@ -142,6 +153,10 @@ namespace Clases
 
             return TreeStack.Pop();
         }
+        /// <summary>
+        /// Metodo para generar los FIRST y LAST de los nodos usando la navegación postorder del arbol binario
+        /// </summary>
+        /// <param name="node">Arbol de expreciones</param>
         public void PostOrder(Node node)
         {
             if (node == null)
@@ -199,6 +214,11 @@ namespace Clases
                 node.Anulable = true;
             }
         }
+        /// <summary>
+        /// Metodo para obtener todos los terminales o hojas del arbol de expreciones 
+        /// </summary>
+        /// <param name="node">Arbol de expreciones</param>
+        /// <param name="diccionario">Diccionario para almacenar los terminales</param>
         public void Terminales(Node node, Dictionary<int, List<string>> diccionario)
         {
             if (node == null)
@@ -207,7 +227,7 @@ namespace Clases
             }
             if (node.Left == null && node.Right == null)
             {
-                List<string> valores = new List<string>();
+                HashSet<string> valores = new HashSet<string>();
                 diccionario.Add(Convert.ToInt32(node.First), valores);
                 return;
             }
@@ -215,6 +235,11 @@ namespace Clases
             Terminales(node.Right, diccionario);
 
         }
+        /// <summary>
+        /// Metodo para calcular la tabla de Follow de los terminales 
+        /// </summary>
+        /// <param name="node">Arbol de expreciones</param>
+        /// <param name="TablaFollow">Diccionario con los terminales</param>
         public void CalcularFollow(Node node, Dictionary<int, List<string>> TablaFollow)
         {
             if (node == null)
