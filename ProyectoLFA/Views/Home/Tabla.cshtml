@@ -1,7 +1,9 @@
-﻿@{
+﻿@model List<string>
+@{
     ViewData["Title"] = "Transiciones ADF";
+    int contador = 1;
+
 }
-@using Clases;
  
 <header>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -14,20 +16,94 @@
         <h1 class="display-4">¡Transforma expresiones!</h1>
         <p>La expresión regular está lista para generar la tabla FLF y transiciones AFD.</p>
     </div>
-    <div class="form-inline">
-        <form asp-action="Tabla" method="post">
-            <button type="submit" class="btn btn-outline-success">Crear Tabla</button>
-        </form>
+
+    <h4 style="margin-top:40px;">Tabla Follow</h4>
+    <div style="max-height: 400px; overflow: auto;" class="table-container">
+        <table style="width: 100%;" class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 50%;">Símbolo</th>
+                    <th style="width: 50%;">Follow</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var elemento in Model)
+                {
+                    <tr>
+                        <td style="width: 50%;">@contador</td>
+                        <td style="width: 50%;">@elemento</td>
+                    </tr>
+                    contador++;
+                }
+            </tbody>
+        </table>
     </div>
 
-    <h1>Tabla</h1>
+    <h4 style="margin-top:40px;">Tabla Follow 2</h4>
+    <div style="max-height: 400px; overflow: auto;" class="table-container">
+        <table style="width: 100%;" class="table">
+            <thead class="table-dark">
+                <tr>
+                    <th style="width: 50%;">Símbolo</th>
+                    <th style="width: 50%;">Follow</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var elemento in Model)
+                {
+                    <tr>
+                        <td style="width: 50%;">@contador</td>
+                        <td style="width: 50%;">@elemento</td>
+                    </tr>
+                    contador++;
+                }
+            </tbody>
+        </table>
+    </div>
 
-    @{
-        ArbolExpresiones arbol = new ArbolExpresiones();
-    }
-
-    @foreach (var elemento in arbol.FollowTable)
-    {
-        <p>@elemento</p>
-    }
 </body>
+
+<style>
+    .celda {
+        width: 50%;
+    }
+
+    .tabla-contenedor {
+        max-height: 400px;
+        overflow: auto;
+        background-color: #f2f2f2;
+        border: 1px solid #ccc;
+    }
+
+        .tabla-contenedor table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tabla-contenedor th,
+        .tabla-contenedor td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tabla-contenedor th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+    .table-container {
+        position: relative;
+    }
+
+        .table-container table {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .table-container thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+</style>
