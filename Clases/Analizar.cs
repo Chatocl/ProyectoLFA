@@ -160,14 +160,17 @@ namespace Clases
                             if (Regex.IsMatch(Texto[a], patronTokens1))
                             {
                                 token = true;
+                                Tokens.Add(Texto[a]);
                             }
                             else if (Regex.IsMatch(Texto[a], patronTokens2))
                             {
                                 token = true;
+                                Tokens.Add(Texto[a]);
                             }
                             else if (Regex.IsMatch(Texto[a], patronTokens3))
                             {
                                 token = true;
+                                Tokens.Add(Texto[a]);
                             }
                             else
                             {
