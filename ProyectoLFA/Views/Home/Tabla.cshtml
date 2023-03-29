@@ -1,6 +1,10 @@
-﻿@{
+﻿@model IEnumerable<ProyectoLFA.Models.Datos.FirstLast>
+
+@{
     ViewData["Title"] = "Transiciones ADF";
 }
+
+@using Clases;
  
 <header>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" />
@@ -8,11 +12,88 @@
 
 </header>
 <body>
-
     <div class="text-center" style="margin-top:65px;">
-        <h1 class="display-4">¡Transforma expresiones!</h1>
-        <p>La expresión regular está lista para generar la tabla FLF y transiciones AFD.</p>
+        <h1 class="display-4">Tabla First, Last, Nulleable</h1>
+        <p>Genera una tabla de transiciones para generar el autómata.</p>
     </div>
+    <h4 style="margin-top:40px;">Tabla FLN</h4>
 
+ <div style="max-height: 400px; overflow: auto;">
+     <table style="width: 100%;" class="table">
+     <thead class="table-dark">
+        <tr>
+            <th style="width: 5%" >ID</th>
+            <th style="width:10%">Simbolo</th>
+            <th style="width:40%" >First</th>
+            <th style="width:40%">Last</th>
+            <th style="width:5%">Nullable</th>
+        </tr>
+        
+    </thead>
+<tbody>
+    @foreach (var item in Model)
+   {
+            <tr>
+                  <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+                <td>
+                @Html.DisplayFor(modelItem => item.simbolo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.first)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.last)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nullable)
+            </td>
+
+            </tr>
+    }
+</tbody>
+</table>
+</div>
 
 </body>
+<style>
+    .tabla-contenedor {
+        max-height: 400px;
+        overflow: auto;
+        background-color: #f2f2f2;
+        border: 1px solid #ccc;
+    }
+
+        .tabla-contenedor table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tabla-contenedor th,
+        .tabla-contenedor td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tabla-contenedor th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+    .table-container {
+        position: relative;
+    }
+
+        .table-container table {
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .table-container thead {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+</style>

@@ -38,8 +38,17 @@ namespace ProyectoLFA.Controllers
         }
         public IActionResult Follow()
         {
-
-            return View();
+            List<string> ImprimirFollow = new List<string>();
+            for (int i = 1; i < Singleton.Instance.TablaFollow.Keys.Count; i++)
+            {
+                string valor = "";
+                for (int a = 0; a < Singleton.Instance.TablaFollow[i].Count; a++)
+                {
+                    valor += Singleton.Instance.TablaFollow[i][a] + ",";
+                }
+                ImprimirFollow.Add(valor.ToString());
+            }
+            return View(ImprimirFollow);
         }
 
         public IActionResult Privacy()
@@ -57,23 +66,7 @@ namespace ProyectoLFA.Controllers
                 string resultado = "";
                 string temp = "";
                 Clases.ArbolExpresiones arbolExpresiones = new Clases.ArbolExpresiones();
-                List<string> ImprimirFollow = new List<string>();
-                Singleton.Instance.ListaImprimir = arbolExpresiones.GetList(Singleton.Instance.Arbol);
-                List<FirstLast> Imprimir = new List<FirstLast>();
-                int pos = 0;
-                for (int i = 0; i < Singleton.Instance.ListaImprimir.Count; i++)
-                {
-                    var newSimbolo = new Models.Datos.FirstLast()
-                    {
-                        Id = (i + 1),
-                        simbolo = Singleton.Instance.ListaImprimir[i].Valor,
-                        first = Singleton.Instance.ListaImprimir[i].First,
-                        last = Singleton.Instance.ListaImprimir[i].Last,
-                        Nullable = Singleton.Instance.ListaImprimir[i].Anulable
-                    };
-                    Imprimir.Add(newSimbolo);
-                }
-
+           
                 for (int a = 0; a < Singleton.Instance.Tokens.Count(); a++)
                 {
                     if (a < Singleton.Instance.Tokens.Count() - 1)
@@ -145,17 +138,24 @@ namespace ProyectoLFA.Controllers
                 arbolExpresiones.PostOrder(Singleton.Instance.Arbol);
                 arbolExpresiones.Terminales(Singleton.Instance.Arbol,Singleton.Instance.TablaFollow);
                 arbolExpresiones.CalcularFollow(Singleton.Instance.Arbol, Singleton.Instance.TablaFollow);
-                for (int i = 1; i < Singleton.Instance.TablaFollow.Keys.Count; i++)
-                {
-                    string valor = "";
-                    for (int a = 0; a < Singleton.Instance.TablaFollow[i].Count; a++)
-                    {
-                        valor += Singleton.Instance.TablaFollow[i][a] + ",";
-                    }
-                    ImprimirFollow.Add(valor.ToString());
-                }
 
-                return View(ImprimirFollow);
+                Singleton.Instance.ListaImprimir = arbolExpresiones.GetList(Singleton.Instance.Arbol);
+                List<FirstLast> Imprimir = new List<FirstLast>();
+                int pos = 0;
+                for (int i = 0; i < Singleton.Instance.ListaImprimir.Count; i++)
+                {
+                    var newSimbolo = new Models.Datos.FirstLast()
+                    {
+                        Id = (i + 1),
+                        simbolo = Singleton.Instance.ListaImprimir[i].Valor,
+                        first = Singleton.Instance.ListaImprimir[i].First,
+                        last = Singleton.Instance.ListaImprimir[i].Last,
+                        Nullable = Singleton.Instance.ListaImprimir[i].Anulable
+                    };
+                    Imprimir.Add(newSimbolo);
+                }
+               
+                return View(Imprimir);
             }
             catch (Exception)
             {
@@ -163,7 +163,7 @@ namespace ProyectoLFA.Controllers
                 
                 
             }
-            return View();
+            return View(null);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
