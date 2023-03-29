@@ -347,17 +347,6 @@ namespace Clases
             return(TransCheck,Tracisiones);
         }
 
-        public List<Node> GetList(Node node) 
-        {
-            List<Node> resultado = new List<Node>();
-            if (node!=null)
-            {
-               resultado.AddRange(GetList(node.Left));
-               resultado.AddRange(GetList(node.Right));
-               resultado.Add(node);
-            }
-            return resultado;
-        }
     }
 
 }
