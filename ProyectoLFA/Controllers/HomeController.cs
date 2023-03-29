@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.VisualBasic.FileIO;
@@ -10,6 +11,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
@@ -45,6 +47,8 @@ namespace ProyectoLFA.Controllers
                 string resultado = "";
                 string temp = "";
                 Clases.ArbolExpresiones arbolExpresiones = new Clases.ArbolExpresiones();
+                List<string> Imprimir = new List<string>();
+
 
 
                 for (int a = 0; a < Singleton.Instance.Tokens.Count(); a++)
@@ -118,8 +122,17 @@ namespace ProyectoLFA.Controllers
                 arbolExpresiones.PostOrder(Singleton.Instance.Arbol);
                 arbolExpresiones.Terminales(Singleton.Instance.Arbol,Singleton.Instance.TablaFollow);
                 arbolExpresiones.CalcularFollow(Singleton.Instance.Arbol, Singleton.Instance.TablaFollow);
-                List<string> FollowTable = arbolExpresiones.FollowTable;
-                return View();
+                for (int i = 1; i < Singleton.Instance.TablaFollow.Keys.Count; i++)
+                {
+                    string valor = "";
+                    for (int a = 0; a < Singleton.Instance.TablaFollow[i].Count; a++)
+                    {
+                        valor += Singleton.Instance.TablaFollow[i][a] + ",";
+                    }
+                    Imprimir.Add(valor.ToString());
+                }
+
+                return View(Imprimir);
             }
             catch (Exception)
             {
