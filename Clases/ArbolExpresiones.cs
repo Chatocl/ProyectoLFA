@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using System.Text;
 
 namespace Clases
@@ -13,6 +14,9 @@ namespace Clases
         private Stack<string> TokenStack = new Stack<string>();
         private Stack<Node> TreeStack = new Stack<Node>();
         private Dictionary<string, int> precedencia = new Dictionary<string, int>();
+        public List<string> FollowTable = new List<string>();
+        public static ArbolExpresiones Instance { get; } = new ArbolExpresiones();
+
         /// <summary>
         /// Metodo de creacion para agregar los simbolos en un dictionario de precedencia
         /// </summary>
@@ -261,6 +265,7 @@ namespace Clases
                             if (!TablaFollow[l].Contains(F))
                             {
                                 TablaFollow[l].Add(F);
+                                FollowTable.Add(F);
                             }
                         }
                     }
@@ -275,6 +280,7 @@ namespace Clases
                             if (!TablaFollow[l].Contains(F))
                             {
                                 TablaFollow[l].Add(F);
+                                FollowTable.Add(F);    
                             }
                         }
                     }
