@@ -6,10 +6,11 @@ using System.Text;
 
 namespace Clases
 {
-    internal class Scanner
+    public class Scanner
     {
-        public void crearArchivo(List<string> sets, List<string> actions, List<string[]> TablaTrancisiones, string nombreProgram) 
+        public void crearArchivo(List<string> sets, List<string> actions, List<string> actionsTokens, List<string[]> TablaTrancisiones, ) 
         {
+            string nombreProgram = "AUTOMATA";
             List<string> lineasDeCodigo = new List<string>();
             lineasDeCodigo.Add("import java.util.Scanner;");
             lineasDeCodigo.Add("public class " + nombreProgram + " {");
@@ -72,11 +73,14 @@ namespace Clases
             lineasDeCodigo.Add("return \"\";");
 
             lineasDeCodigo.Add("}"); //Finaliza funcion sets
-            lineasDeCodigo.Add("static String RESERVADAS(String command) {"); //Inicia funcion de RESERVADAS
-            for (int i = 0; i < 0; i++)
+            lineasDeCodigo.Add("static String RESERVADAS(String command) {"); //Inicia funcion de actions
+            for (int i = 0; i < actions.Count; i++)
             {
-
+                lineasDeCodigo.Add("if (command.equalsIgnoreCase(\""+actions[i]+"\"))");
+                lineasDeCodigo.Add("return \"TOKEN "+actionsTokens[i]+"\";");
             }
+            lineasDeCodigo.Add("return \"TOKEN " + Convert.ToString(Convert.ToInt32(actionsTokens[0]) - 1) + "\";");
+            lineasDeCodigo.Add("}");//Finaliza funcion actions 
             lineasDeCodigo.Add("}"); //Finaliza el programa
 
             // Create an array of strings to write to the file
@@ -84,7 +88,7 @@ namespace Clases
 
             // Write the array of strings to the file
 
-            File.WriteAllLines(nombreProgram + ".java", lines);
+           File.WriteAllLines(nombreProgram + ".java", lines);
 
         }
     }

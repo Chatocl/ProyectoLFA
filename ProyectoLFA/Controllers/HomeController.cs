@@ -30,6 +30,20 @@ namespace ProyectoLFA.Controllers
             return View();
         }
 
+        public IActionResult Automata()
+        {
+            string temp = "";
+            List<string> ActionsTokens = new List<string>();  
+            for (int i = 0; i < Singleton.Instance.Actions.Count(); i++)
+            {
+                ActionsTokens.Add(Singleton.Instance.Actions[i].Substring(0,1));
+                temp = Regex.Replace(Singleton.Instance.Actions[i],@"^\s*(\d+)\s*\=\s*'","");
+                temp = Regex.Replace(temp, @"'$", "");
+                Singleton.Instance.Actions[i]=temp;
+            }
+            Singleton.Instance.Scanner.crearArchivo(Singleton.Instance.Sets,Singleton.Instance.Actions,ActionsTokens,Singleton.Instance.TablaTrancisiones);
+            return View("GenerarAutomata");
+        }
         public IActionResult Index()
         {
             
@@ -241,7 +255,7 @@ namespace ProyectoLFA.Controllers
 
             try
             {
-                (ResTexto,Tokens,Actions) = Singleton.Instance.Analizar.Analizar_Texto(Singleton.Instance.Texto);
+                (ResTexto,Tokens,Actions,Singleton.Instance.Sets) = Singleton.Instance.Analizar.Analizar_Texto(Singleton.Instance.Texto);
                 if (ResTexto[0] == -1) 
                 {
                     repuesta.RepuestaId = "No se han encontrado errores.";

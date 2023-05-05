@@ -13,12 +13,13 @@ namespace Clases
         /// </summary>
         /// <param name="Texto"></param>
         /// <returns> una lista de enteros donde -1 es si todo esta correcto y -2 si algo no esta correcto mas la fila donde se encuentra el fallo</returns>
-        public (List<int>,List<string>,List<string>) Analizar_Texto(List<string> Texto) 
+        public (List<int>,List<string>,List<string>,List<string>) Analizar_Texto(List<string> Texto) 
         {
             int a = 0;
             bool paso = false;
             bool token = true;
             List<int> Verificado = new List<int>();
+            List<string>  Sets = new List<string>();
             List<string> Tokens = new List<string>();
             List<string> Actions = new List<string>();
             string patron_SETS = @"^\s*(\w+)\s*=\s*(('\w+'|CHR\((\d+)\))((\s*\.\.\s*)|(\s*\+?\s*))?)*\s*$";
@@ -35,6 +36,7 @@ namespace Clases
                     a++;
                     while (Regex.IsMatch(Texto[a], patron_SETS))
                     {
+                        Sets.Add(Texto[a]);
                         a++;
                     }
                     if (Regex.IsMatch(Texto[a], @"^\s*TOKENS\s*$")) 
@@ -268,7 +270,7 @@ namespace Clases
                     }
                 }
             }
-            return (Verificado,Tokens,Actions);
+            return (Verificado,Tokens,Actions,Sets);
         
         }
 
