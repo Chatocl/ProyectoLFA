@@ -25,6 +25,10 @@ namespace ProyectoLFA.Controllers
             Environment = _environment;
 
         }
+        public IActionResult GenerarAutomata() 
+        { 
+            return View();
+        }
 
         public IActionResult Index()
         {
@@ -48,6 +52,7 @@ namespace ProyectoLFA.Controllers
                 }
                 ImprimirFollow.Add(valor.ToString());
             }
+           
             return View(ImprimirFollow);
         }
 
@@ -138,8 +143,9 @@ namespace ProyectoLFA.Controllers
                 arbolExpresiones.PostOrder(Singleton.Instance.Arbol);
                 arbolExpresiones.Terminales(Singleton.Instance.Arbol,Singleton.Instance.TablaFollow);
                 arbolExpresiones.CalcularFollow(Singleton.Instance.Arbol, Singleton.Instance.TablaFollow);
-
                 Singleton.Instance.ListaImprimir = arbolExpresiones.GetList(Singleton.Instance.Arbol);
+                Singleton.Instance.Simbolos = arbolExpresiones.ObSimbolosValor();
+                (Singleton.Instance.Transiciones, Singleton.Instance.TablaTrancisiones) = arbolExpresiones.TablaTrancisiones(Singleton.Instance.Arbol, Singleton.Instance.TablaFollow);
                 List<FirstLast> Imprimir = new List<FirstLast>();
                 int pos = 0;
                 for (int i = 0; i < Singleton.Instance.ListaImprimir.Count; i++)
@@ -227,18 +233,20 @@ namespace ProyectoLFA.Controllers
         public ActionResult Analisis_Lexico()
         {
             List<int> ResTexto = new List<int>();
-            List<string> Tokens = new List<string>();
+            List<string> Tokens = new List<string>(); 
+            List<string> Actions = new List<string>();
             int a=0;
             Repuesta repuesta = new Repuesta();
             repuesta.RepuestaId = "";
 
             try
             {
-                (ResTexto,Tokens) = Singleton.Instance.Analizar.Analizar_Texto(Singleton.Instance.Texto);
+                (ResTexto,Tokens,Actions) = Singleton.Instance.Analizar.Analizar_Texto(Singleton.Instance.Texto);
                 if (ResTexto[0] == -1) 
                 {
                     repuesta.RepuestaId = "No se han encontrado errores.";
                     Singleton.Instance.Tokens = Tokens;
+                    Singleton.Instance.Actions = Actions;
                 }
                 else
                 {

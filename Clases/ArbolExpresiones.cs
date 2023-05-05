@@ -15,6 +15,7 @@ namespace Clases
         private Stack<Node> TreeStack = new Stack<Node>();
         private Dictionary<string, int> precedencia = new Dictionary<string, int>();
         public static ArbolExpresiones Instance { get; } = new ArbolExpresiones();
+        public static List<string> TerminalesValor  = new List<string>();
 
         /// <summary>
         /// Metodo de creacion para agregar los simbolos en un dictionario de precedencia
@@ -233,12 +234,15 @@ namespace Clases
             {
                 List<string> valores = new List<string>();
                 diccionario.Add(Convert.ToInt32(node.First), valores);
+                TerminalesValor.Add(node.Valor);
                 return;
             }
             Terminales(node.Left, diccionario);
             Terminales(node.Right, diccionario);
 
         }
+
+
         /// <summary>
         /// Metodo para calcular la tabla de Follow de los terminales 
         /// </summary>
@@ -347,6 +351,11 @@ namespace Clases
                resultado.Add(node);
             }
             return resultado;
+        }
+
+        public List<string> ObSimbolosValor() 
+        {
+            return TerminalesValor;
         }
     }
 
