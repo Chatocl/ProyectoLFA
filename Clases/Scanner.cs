@@ -8,7 +8,7 @@ namespace Clases
 {
     public class Scanner
     {
-        public void crearArchivo(List<string> sets, List<string> actions, List<string> actionsTokens, List<string[]> TablaTrancisiones, ) 
+        public void crearArchivo(List<string> sets, List<string> actions, List<string> actionsTokens, List<string[]> TablaTrancisiones,List<string> Trancisiones, List<string> Simbolos ) 
         {
             string nombreProgram = "AUTOMATA";
             List<string> lineasDeCodigo = new List<string>();
@@ -21,7 +21,10 @@ namespace Clases
             lineasDeCodigo.Add("int index = 0;");
             lineasDeCodigo.Add("int actual_state = 0;");
 
-            
+            for (int i = 0; i < Trancisiones.Count; i++)
+            {
+
+            }
             
 
             lineasDeCodigo.Add("}"); // Fin Main 

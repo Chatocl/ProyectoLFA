@@ -41,7 +41,7 @@ namespace ProyectoLFA.Controllers
                 temp = Regex.Replace(temp, @"'$", "");
                 Singleton.Instance.Actions[i]=temp;
             }
-            Singleton.Instance.Scanner.crearArchivo(Singleton.Instance.Sets,Singleton.Instance.Actions,ActionsTokens,Singleton.Instance.TablaTrancisiones);
+            Singleton.Instance.Scanner.crearArchivo(Singleton.Instance.Sets,Singleton.Instance.Actions,ActionsTokens,Singleton.Instance.TablaTrancisiones,Singleton.Instance.Transiciones,Singleton.Instance.Simbolos);
             return View("GenerarAutomata");
         }
         public IActionResult Index()
