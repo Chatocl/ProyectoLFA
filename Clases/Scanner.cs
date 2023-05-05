@@ -20,13 +20,12 @@ namespace Clases
             lineasDeCodigo.Add("String program = in.nextLine() + \" \";");
             lineasDeCodigo.Add("int index = 0;");
             lineasDeCodigo.Add("int actual_state = 0;");
+            // esto le toca a fer 
 
-            for (int i = 0; i < Trancisiones.Count; i++)
-            {
 
-            }
             
-
+            
+            // esto le toca a fer 
             lineasDeCodigo.Add("}"); // Fin Main 
 
 
