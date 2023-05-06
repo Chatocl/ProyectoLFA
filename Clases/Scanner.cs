@@ -23,16 +23,45 @@ namespace Clases
             // esto le toca a fer 
 
 
-            
+           
             
             // esto le toca a fer 
             lineasDeCodigo.Add("}"); // Fin Main 
+            lineasDeCodigo.Add("static String identify_TERMINAL(char lexeme) {");
+            for (int i = 0; i < Simbolos.Count ; i++)
+            {
+                if (Simbolos[i] == "DIGITO")
+                {
 
+                }
+                else if (Simbolos[i]=="#")
+                {
 
+                }
+                else if (Simbolos[i] == "LETRA")
+                {
 
+                }
+                else if (Simbolos[i] == "CHARSET") 
+                { 
+                
+                }
+                else
+                {
+                    string temp = Simbolos[i];
+                    string temp2 = Simbolos[i].Replace("\'", "\""); ;
+                   
+                    lineasDeCodigo.Add("if (lexeme == "+temp+")");
+                    lineasDeCodigo.Add("return " +temp2+ ";");
+                    lineasDeCodigo.Add("");
+                }
+            }
+            lineasDeCodigo.Add("if (lexeme == ' ')");
+            lineasDeCodigo.Add("return \"BLANK_SPACE\";");
+            lineasDeCodigo.Add("");
+            lineasDeCodigo.Add("return \"\";");
+            lineasDeCodigo.Add("}");
             //Trabajando los set
-            
-
             lineasDeCodigo.Add("static String identify_SET(char lexeme) {"); //Inicia funcion de SETS
             lineasDeCodigo.Add("int lexeme_value = (int)lexeme;");
             for (int i = 0; i < sets.Count; i++)
