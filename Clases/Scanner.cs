@@ -20,12 +20,96 @@ namespace Clases
             lineasDeCodigo.Add("String program = in.nextLine() + \" \";");
             lineasDeCodigo.Add("int index = 0;");
             lineasDeCodigo.Add("int actual_state = 0;");
-            // esto le toca a fer 
+        
+
+            lineasDeCodigo.Add("String command = \"\";");
+            lineasDeCodigo.Add("while (index < program.length())");
+            lineasDeCodigo.Add("{");
+            lineasDeCodigo.Add("char lexeme = program.charAt(index);");
+            lineasDeCodigo.Add("String symbol = identify_SET(lexeme);");
+            lineasDeCodigo.Add("if (symbol.equals(\"\"))");
+            lineasDeCodigo.Add("{");
+            lineasDeCodigo.Add("symbol = identify_TERMINAL(lexeme);");
+            lineasDeCodigo.Add("}");
+            lineasDeCodigo.Add("if (symbol.equals(\"\"))");
+            lineasDeCodigo.Add("{");
+            lineasDeCodigo.Add("System.out.println(\"Simbolo no reconocido\");");
+            lineasDeCodigo.Add("break;");
+            lineasDeCodigo.Add("}");
+            lineasDeCodigo.Add("switch (actual_state) {");
+
+            for (int a = 0; a < Trancisiones.Count; a++)
+            {
+                lineasDeCodigo.Add("case " + Convert.ToString(a) + ":{");
+                lineasDeCodigo.Add("switch (symbol)");
+                lineasDeCodigo.Add("{");
+
+                if (Trancisiones[a]!=Simbolos.Count.ToString())
+                {
+                    for (int b = 0; b < TablaTrancisiones[a].Length; b++)
+                    {
+                        if (TablaTrancisiones[a][b] != "")
+                        {
+                            if (Simbolos[b] == "DIGITO")
+                            {
+                                lineasDeCodigo.Add("case \"" + Simbolos[b] + "\":{");
+                                lineasDeCodigo.Add("actual_state = " + Trancisiones.IndexOf(TablaTrancisiones[a][b]) + ";");
+                                lineasDeCodigo.Add("command += lexeme;");
+                                lineasDeCodigo.Add("}break;");
+                            }
+                            else if (Simbolos[b] == "#")
+                            {
+
+                            }
+                            else if (Simbolos[b] == "LETRA")
+                            {
+                                lineasDeCodigo.Add("case \"" + Simbolos[b] + "\":{");
+                                lineasDeCodigo.Add("actual_state = " + Trancisiones.IndexOf(TablaTrancisiones[a][b]) + ";");
+                                lineasDeCodigo.Add("command += lexeme;");
+                                lineasDeCodigo.Add("}break;");
+                            }
+                            else if (Simbolos[b] == "CHARSET")
+                            {
+                                lineasDeCodigo.Add("case \"" + Simbolos[b] + "\":{");
+                                lineasDeCodigo.Add("actual_state = " + Trancisiones.IndexOf(TablaTrancisiones[a][b]) + ";");
+                                lineasDeCodigo.Add("command += lexeme;");
+                                lineasDeCodigo.Add("}break;");
+                            }
+                            else
+                            {
+                                lineasDeCodigo.Add("case " + Simbolos[b] + ":{");
+                                lineasDeCodigo.Add("actual_state = " + Trancisiones.IndexOf(TablaTrancisiones[a][b]) + ";");
+                                lineasDeCodigo.Add("command += lexeme;");
+                                lineasDeCodigo.Add("}break;");
+                            }
+
+                           
+                        }
+
+                    }
+                    if (Trancisiones[a].Contains(Convert.ToChar(Simbolos.Count)))
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+               
+
+                lineasDeCodigo.Add("default:{");
+                lineasDeCodigo.Add("System.out.println(\"Simbolo no reconocido\");");
+                lineasDeCodigo.Add("}break;");
+                lineasDeCodigo.Add("}");
+
+            }
+            lineasDeCodigo.Add("}");//Fin switchPrincipal
+            lineasDeCodigo.Add("index++;");
+            lineasDeCodigo.Add("}"); // Fin while
 
 
-           
-            
-            // esto le toca a fer 
+
             lineasDeCodigo.Add("}"); // Fin Main 
             lineasDeCodigo.Add("static String identify_TERMINAL(char lexeme) {");
             for (int i = 0; i < Simbolos.Count ; i++)
