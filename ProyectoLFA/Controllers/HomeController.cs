@@ -36,8 +36,9 @@ namespace ProyectoLFA.Controllers
             List<string> ActionsTokens = new List<string>();  
             for (int i = 0; i < Singleton.Instance.Actions.Count(); i++)
             {
-                ActionsTokens.Add(Singleton.Instance.Actions[i].Substring(0,1));
-                temp = Regex.Replace(Singleton.Instance.Actions[i],@"^\s*(\d+)\s*\=\s*'","");
+                Match match = Regex.Match(Singleton.Instance.Actions[i], @"^\s*(\d+)\s*");
+                ActionsTokens.Add(match.Groups[1].Value);
+                temp = Regex.Replace(Singleton.Instance.Actions[i],@" ^\s*(\d+)\s*\=\s*'","");
                 temp = Regex.Replace(temp, @"'$", "");
                 Singleton.Instance.Actions[i]=temp;
             }
